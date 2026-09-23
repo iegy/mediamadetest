@@ -15,7 +15,7 @@ export const NAV_ITEMS = {
     { key: "clients", label: "العملاء", href: "clients.html", built: true },
     { key: "followup", label: "المتابعات", href: "followup.html", built: true },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
-    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
+    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: true },
     { key: "calendar", label: "الكاليندر", href: "calendar.html", built: false },
     { key: "payments", label: "المدفوعات", href: "payments.html", built: false },
     { key: "expenses", label: "المصروفات", href: "expenses.html", built: false },
@@ -27,7 +27,7 @@ export const NAV_ITEMS = {
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
     { key: "clients", label: "العملاء", href: "clients.html", built: true },
     { key: "followup", label: "المتابعات", href: "followup.html", built: true },
-    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
+    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: true },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
   ],
   sales: [

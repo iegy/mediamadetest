@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>عروض الأسعار · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="القائمة الرئيسية"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="logout-btn" class="btn-ghost" type="button">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1>عروض الأسعار</h1>
+      </header>
+
+      <section class="content">
+        <div class="toolbar">
+          <input id="search-input" class="search-input" type="text" placeholder="ابحث باسم العميل أو الخدمة...">
+          <div style="display:flex; gap:10px;">
+            <button id="price-list-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden>قائمة الأسعار</button>
+            <button id="add-quote-btn" class="btn-primary btn-primary--inline" type="button">+ عرض سعر جديد</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>رقم العرض</th>
+                <th>العميل</th>
+                <th>الخدمة</th>
+                <th>الإجمالي</th>
+                <th>الحالة</th>
+                <th>صالح حتى</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="quotes-tbody">
+              <tr class="empty-row"><td colspan="7">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal: إضافة / تعديل عرض سعر -->
+  <div id="quote-modal" class="modal-backdrop" hidden>
+    <div class="modal-card" style="max-width:640px;">
+      <h2 id="modal-title">عرض سعر جديد</h2>
+      <form id="quote-form" novalidate>
+        <input type="hidden" id="quote-id">
+        <div class="field-grid">
+          <div class="field field--full">
+            <label for="f-client">العميل *</label>
+            <select id="f-client" required>
+              <option value="">اختر العميل...</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="f-service">الخدمة</label>
+            <input type="text" id="f-service">
+          </div>
+          <div class="field field--full">
+            <label for="f-scope">Scope of Work</label>
+            <textarea id="f-scope"></textarea>
+          </div>
+          <div class="field field--full">
+            <label for="f-deliverables">Deliverables</label>
+            <textarea id="f-deliverables"></textarea>
+          </div>
+
+          <div class="field field--full" style="border-top:1px solid var(--border); padding-top:12px;">
+            <label style="font-weight:700; color:var(--ink);">البنود والأسعار</label>
+            <div id="line-items-wrap"></div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <select id="price-list-select" style="flex:1;">
+                <option value="">إضافة من قائمة الأسعار...</option>
+              </select>
+              <button type="button" id="add-from-list-btn" class="icon-btn">إضافة</button>
+              <button type="button" id="add-custom-line-btn" class="icon-btn">بند مخصص</button>
+            </div>
+            <p style="margin:10px 0 0; font-weight:800;">الإجمالي: <span id="total-amount">0</span></p>
+          </div>
+
+          <div class="field field--full">
+            <label for="f-terms">شروط الدفع</label>
+            <textarea id="f-terms"></textarea>
+          </div>
+          <div class="field">
+            <label for="f-valid-until">صالح حتى تاريخ</label>
+            <input type="date" id="f-valid-until">
+          </div>
+          <div class="field">
+            <label for="f-status">حالة العرض</label>
+            <select id="f-status">
+              <option value="draft">مسودة</option>
+              <option value="sent">تم الإرسال</option>
+              <option value="approved">تمت الموافقة</option>
+              <option value="rejected">مرفوض</option>
+              <option value="expired">منتهي الصلاحية</option>
+            </select>
+          </div>
+        </div>
+        <p id="form-error" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn-secondary">إلغاء</button>
+          <button type="submit" id="save-btn" class="btn-primary">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: قائمة الأسعار (إدارة بس) -->
+  <div id="price-list-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2>قائمة الأسعار المعتمدة</h2>
+      <div class="table-wrap" style="margin-bottom:14px;">
+        <table class="data-table">
+          <thead><tr><th>الخدمة</th><th>السعر</th><th></th></tr></thead>
+          <tbody id="price-list-tbody"></tbody>
+        </table>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="pl-name">اسم الخدمة</label>
+          <input type="text" id="pl-name">
+        </div>
+        <div class="field">
+          <label for="pl-price">السعر</label>
+          <input type="number" id="pl-price" min="0">
+        </div>
+      </div>
+      <p id="price-list-error" class="form-error"></p>
+      <div class="modal-actions">
+        <button type="button" id="price-list-close-btn" class="btn-secondary">إغلاق</button>
+        <button type="button" id="price-list-add-btn" class="btn-primary">إضافة للقائمة</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="quotations.js"></script>
+</body>
+</html>

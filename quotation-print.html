@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>عرض سعر · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1E1B2E;
+    --ink-muted: #6B6580;
+    --border: #E5E1ED;
+    --accent-start: #C026D3;
+    --accent-end: #4338CA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Tajawal", "Segoe UI", sans-serif;
+    color: var(--ink);
+    margin: 0;
+    padding: 32px;
+    background: #F6F5FA;
+  }
+  .sheet {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px;
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  }
+  .brand-word { font-weight: 800; font-size: 18px; }
+  .quote-meta { text-align: left; font-size: 13px; color: var(--ink-muted); }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .section { margin-bottom: 20px; }
+  .section h2 { font-size: 14px; color: var(--ink-muted); margin: 0 0 6px; }
+  .section p { margin: 0; white-space: pre-wrap; line-height: 1.7; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: right; padding: 9px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--ink-muted); font-size: 12.5px; }
+  tfoot td { font-weight: 800; border-top: 2px solid var(--border); border-bottom: none; }
+  .status-line { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+  .print-bar { max-width: 780px; margin: 0 auto 14px; text-align: left; }
+  .print-btn {
+    padding: 9px 18px; border: none; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+    color: #fff; font-family: inherit; font-weight: 700; font-size: 13.5px; cursor: pointer;
+  }
+  .credit {
+    text-align: center; font-size: 11.5px; color: var(--ink-muted); margin-top: 26px;
+  }
+  .credit a { color: var(--ink-muted); }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .print-bar { display: none; }
+    .sheet { border: none; border-radius: 0; padding: 0; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+  <div class="print-bar">
+    <button class="print-btn" onclick="window.print()">اطبع / احفظ كـ PDF</button>
+  </div>
+
+  <main id="sheet" class="sheet">
+    <p>جاري تحميل عرض السعر...</p>
+  </main>
+
+  <script type="module" src="quotation-print.js"></script>
+</body>
+</html>
