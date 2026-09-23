@@ -12,7 +12,7 @@ export const ROLE_LABELS = {
 export const NAV_ITEMS = {
   management: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "clients", label: "العملاء", href: "clients.html", built: false },
+    { key: "clients", label: "العملاء", href: "clients.html", built: true },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
     { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
     { key: "calendar", label: "الكاليندر", href: "calendar.html", built: false },
@@ -24,14 +24,14 @@ export const NAV_ITEMS = {
   ],
   client_management: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "clients", label: "العملاء", href: "clients.html", built: false },
+    { key: "clients", label: "العملاء", href: "clients.html", built: true },
     { key: "followup", label: "المتابعات", href: "followup.html", built: false },
     { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
   ],
   sales: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "leads", label: "العملاء المسؤول عنهم", href: "clients.html", built: false },
+    { key: "leads", label: "العملاء المسؤول عنهم", href: "clients.html", built: true },
     { key: "followup", label: "المتابعات", href: "followup.html", built: false },
   ],
   production: [
@@ -44,3 +44,29 @@ export const NAV_ITEMS = {
     { key: "myprojects", label: "مشاريعي", href: "my-projects.html", built: false },
   ],
 };
+
+// حالات العميل زي ما هي في مستند المتطلبات (بند 3)، مقسّمة لمجموعات لونية للعرض
+export const CLIENT_STATUSES = [
+  { key: "new", label: "جديد", group: "neutral" },
+  { key: "contacted", label: "تم التواصل", group: "active" },
+  { key: "meeting", label: "اجتماع", group: "active" },
+  { key: "quotation_sent", label: "تم إرسال العرض", group: "active" },
+  { key: "negotiation", label: "تفاوض", group: "active" },
+  { key: "approved", label: "تمت الموافقة", group: "active" },
+  { key: "paid", label: "تم الدفع", group: "success" },
+  { key: "booked", label: "تم الحجز", group: "success" },
+  { key: "in_progress", label: "جاري التنفيذ", group: "success" },
+  { key: "delivered", label: "تم التسليم", group: "success" },
+  { key: "closed", label: "مغلق", group: "neutral" },
+  { key: "lost", label: "خسارة", group: "lost" },
+];
+
+export function statusLabel(key) {
+  const found = CLIENT_STATUSES.find((s) => s.key === key);
+  return found ? found.label : key;
+}
+
+export function statusGroup(key) {
+  const found = CLIENT_STATUSES.find((s) => s.key === key);
+  return found ? found.group : "neutral";
+}
