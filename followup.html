@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>المتابعات · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="القائمة الرئيسية"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="logout-btn" class="btn-ghost" type="button">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1>المتابعات</h1>
+      </header>
+
+      <section class="content">
+        <div class="toolbar">
+          <input id="search-input" class="search-input" type="text" placeholder="ابحث بالاسم أو رقم الهاتف...">
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>اسم العميل</th>
+                <th>آخر متابعة</th>
+                <th>ملاحظات آخر تواصل</th>
+                <th>المتابعة القادمة</th>
+                <th>الخطوة القادمة</th>
+                <th>المسؤول</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="followup-tbody">
+              <tr class="empty-row"><td colspan="7">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal: تحديث سريع للمتابعة -->
+  <div id="followup-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2 id="modal-title">تحديث المتابعة</h2>
+      <form id="followup-form" novalidate>
+        <input type="hidden" id="client-id">
+        <div class="field-grid">
+          <div class="field">
+            <label for="f-last-date">تاريخ آخر متابعة</label>
+            <input type="date" id="f-last-date">
+          </div>
+          <div class="field">
+            <label for="f-next-date">تاريخ المتابعة القادمة</label>
+            <input type="date" id="f-next-date">
+          </div>
+          <div class="field field--full">
+            <label for="f-last-notes">ملاحظات آخر تواصل</label>
+            <textarea id="f-last-notes"></textarea>
+          </div>
+          <div class="field field--full">
+            <label for="f-next-step">الخطوة القادمة</label>
+            <input type="text" id="f-next-step">
+          </div>
+        </div>
+        <p id="form-error" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn-secondary">إلغاء</button>
+          <button type="submit" id="save-btn" class="btn-primary">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="followup.js"></script>
+</body>
+</html>

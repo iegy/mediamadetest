@@ -1,5 +1,6 @@
-import { watchAuth, logout } from "./auth.js";
+import { watchAuth, logout, db } from "./auth.js";
 import { NAV_ITEMS, ROLE_LABELS } from "./permissions.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 // بيحمي أي صفحة داخلية: يتأكد من تسجيل الدخول، يرسم القائمة الجانبية حسب الدور،
 // ويستدعي onReady(profile, user) بعد ما كل حاجة تتجهز — كل صفحة تبني منطقها الخاص جواه.
@@ -14,6 +15,7 @@ export function initAppShell(onReady) {
       userNameEl.textContent = profile.name || user.email;
       userRoleEl.textContent = ROLE_LABELS[profile.role] || profile.role;
       renderNav(sidebarNav, profile.role);
+      watchOverdueFollowUps();
       if (onReady) onReady(profile, user);
     },
     (message) => {
@@ -23,6 +25,30 @@ export function initAppShell(onReady) {
   );
 
   if (logoutBtn) logoutBtn.addEventListener("click", logout);
+}
+
+function watchOverdueFollowUps() {
+  const link = document.querySelector('.nav-item[href="followup.html"]');
+  if (!link) return;
+
+  const badge = document.createElement("span");
+  badge.className = "nav-alert-badge";
+  badge.hidden = true;
+  link.appendChild(badge);
+
+  const today = new Date().toISOString().slice(0, 10);
+  onSnapshot(collection(db, "clients"), (snap) => {
+    const overdue = snap.docs.filter((d) => {
+      const c = d.data();
+      return c.nextFollowUpDate && c.nextFollowUpDate < today && c.status !== "closed" && c.status !== "lost";
+    }).length;
+    if (overdue > 0) {
+      badge.textContent = overdue;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  });
 }
 
 function renderNav(sidebarNav, role) {

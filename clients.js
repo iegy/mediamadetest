@@ -38,6 +38,10 @@ const fOwner = document.getElementById("f-owner");
 const fStatus = document.getElementById("f-status");
 const fDate = document.getElementById("f-date");
 const fNotes = document.getElementById("f-notes");
+const fLastFollowUpDate = document.getElementById("f-last-followup-date");
+const fNextFollowUpDate = document.getElementById("f-next-followup-date");
+const fLastFollowUpNotes = document.getElementById("f-last-followup-notes");
+const fNextStep = document.getElementById("f-next-step");
 
 initAppShell((profile) => {
   currentRole = profile.role;
@@ -169,6 +173,10 @@ function openEdit(id) {
   fStatus.value = c.status || "new";
   fDate.value = c.firstContactDate || "";
   fNotes.value = c.notes || "";
+  fLastFollowUpDate.value = c.lastFollowUpDate || "";
+  fNextFollowUpDate.value = c.nextFollowUpDate || "";
+  fLastFollowUpNotes.value = c.lastFollowUpNotes || "";
+  fNextStep.value = c.nextStep || "";
   modalTitle.textContent = "تعديل بيانات العميل";
   formError.textContent = "";
   modal.hidden = false;
@@ -207,6 +215,10 @@ form.addEventListener("submit", async (e) => {
     status: fStatus.value,
     firstContactDate: fDate.value,
     notes: fNotes.value.trim(),
+    lastFollowUpDate: fLastFollowUpDate.value,
+    nextFollowUpDate: fNextFollowUpDate.value,
+    lastFollowUpNotes: fLastFollowUpNotes.value.trim(),
+    nextStep: fNextStep.value.trim(),
     updatedAt: serverTimestamp(),
     updatedBy: auth.currentUser ? auth.currentUser.uid : null,
   };

@@ -13,6 +13,7 @@ export const NAV_ITEMS = {
   management: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
     { key: "clients", label: "العملاء", href: "clients.html", built: true },
+    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
     { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
     { key: "calendar", label: "الكاليندر", href: "calendar.html", built: false },
@@ -25,14 +26,14 @@ export const NAV_ITEMS = {
   client_management: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
     { key: "clients", label: "العملاء", href: "clients.html", built: true },
-    { key: "followup", label: "المتابعات", href: "followup.html", built: false },
+    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
     { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: false },
     { key: "projects", label: "المشاريع", href: "projects.html", built: false },
   ],
   sales: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
     { key: "leads", label: "العملاء المسؤول عنهم", href: "clients.html", built: true },
-    { key: "followup", label: "المتابعات", href: "followup.html", built: false },
+    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
   ],
   production: [
     { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
