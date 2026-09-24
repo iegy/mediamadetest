@@ -44,6 +44,7 @@
         <div class="toolbar">
           <input id="search-input" class="search-input" type="text" placeholder="ابحث باسم العميل أو الخدمة...">
           <div style="display:flex; gap:10px;">
+            <button id="company-info-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden>بيانات الشركة</button>
             <button id="price-list-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden>قائمة الأسعار</button>
             <button id="add-quote-btn" class="btn-primary btn-primary--inline" type="button">+ عرض سعر جديد</button>
           </div>
@@ -162,6 +163,41 @@
       <div class="modal-actions">
         <button type="button" id="price-list-close-btn" class="btn-secondary">إغلاق</button>
         <button type="button" id="price-list-add-btn" class="btn-primary">إضافة للقائمة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: بيانات الشركة (بتظهر في عروض الأسعار المطبوعة) -->
+  <div id="company-info-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2>بيانات الشركة</h2>
+      <p style="font-size:12.5px; color:var(--ink-muted); margin-top:-8px;">البيانات دي بتظهر في أسفل عروض الأسعار المطبوعة بدل بيانات المطوّر، وتقدروا تعدّلوها وقت ما تحبوا.</p>
+      <div class="field-grid">
+        <div class="field field--full">
+          <label for="ci-name">اسم الشركة</label>
+          <input type="text" id="ci-name" placeholder="Media Made">
+        </div>
+        <div class="field">
+          <label for="ci-phone">الهاتف</label>
+          <input type="text" id="ci-phone">
+        </div>
+        <div class="field">
+          <label for="ci-email">البريد الإلكتروني</label>
+          <input type="email" id="ci-email">
+        </div>
+        <div class="field field--full">
+          <label for="ci-address">العنوان</label>
+          <input type="text" id="ci-address">
+        </div>
+        <div class="field field--full">
+          <label for="ci-website">الموقع الإلكتروني / السوشيال ميديا</label>
+          <input type="text" id="ci-website">
+        </div>
+      </div>
+      <p id="company-info-error" class="form-error"></p>
+      <div class="modal-actions">
+        <button type="button" id="company-info-close-btn" class="btn-secondary">إغلاق</button>
+        <button type="button" id="company-info-save-btn" class="btn-primary">حفظ</button>
       </div>
     </div>
   </div>

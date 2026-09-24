@@ -9,6 +9,8 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc,
+  setDoc,
   getDocs,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
@@ -57,7 +59,10 @@ const plError = document.getElementById("price-list-error");
 
 initAppShell((profile) => {
   currentRole = profile.role;
-  if (currentRole === "management") priceListBtn.hidden = false;
+  if (currentRole === "management") {
+    priceListBtn.hidden = false;
+    document.getElementById("company-info-btn").hidden = false;
+  }
   loadClients();
   watchPriceList();
   watchQuotes();
@@ -368,5 +373,51 @@ document.getElementById("price-list-add-btn").addEventListener("click", async ()
     plPrice.value = "";
   } catch (err) {
     plError.textContent = "تعذّر الإضافة: " + err.message;
+  }
+});
+
+// ---------- Company info (shown on printed quotations instead of the developer credit) ----------
+
+const ciModal = document.getElementById("company-info-modal");
+const ciName = document.getElementById("ci-name");
+const ciPhone = document.getElementById("ci-phone");
+const ciEmail = document.getElementById("ci-email");
+const ciAddress = document.getElementById("ci-address");
+const ciWebsite = document.getElementById("ci-website");
+const ciError = document.getElementById("company-info-error");
+
+document.getElementById("company-info-btn").addEventListener("click", async () => {
+  ciError.textContent = "";
+  try {
+    const snap = await getDoc(doc(db, "settings", "company"));
+    const data = snap.exists() ? snap.data() : {};
+    ciName.value = data.name || "";
+    ciPhone.value = data.phone || "";
+    ciEmail.value = data.email || "";
+    ciAddress.value = data.address || "";
+    ciWebsite.value = data.website || "";
+  } catch (err) {
+    ciError.textContent = "تعذّر تحميل البيانات: " + err.message;
+  }
+  ciModal.hidden = false;
+});
+
+document.getElementById("company-info-close-btn").addEventListener("click", () => { ciModal.hidden = true; });
+ciModal.addEventListener("click", (e) => { if (e.target === ciModal) ciModal.hidden = true; });
+
+document.getElementById("company-info-save-btn").addEventListener("click", async () => {
+  ciError.textContent = "";
+  try {
+    await setDoc(doc(db, "settings", "company"), {
+      name: ciName.value.trim(),
+      phone: ciPhone.value.trim(),
+      email: ciEmail.value.trim(),
+      address: ciAddress.value.trim(),
+      website: ciWebsite.value.trim(),
+      updatedAt: serverTimestamp(),
+    });
+    ciModal.hidden = true;
+  } catch (err) {
+    ciError.textContent = "تعذّر الحفظ: " + err.message;
   }
 });

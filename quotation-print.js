@@ -25,7 +25,12 @@ watchAuth(
         sheet.innerHTML = "<p>عرض السعر ده مش موجود.</p>";
         return;
       }
-      render(snap.id, snap.data());
+      let company = {};
+      try {
+        const compSnap = await getDoc(doc(db, "settings", "company"));
+        if (compSnap.exists()) company = compSnap.data();
+      } catch (e) { /* لو مفيش صلاحية أو مفيش بيانات، هيتعرض اسم الشركة بس */ }
+      render(snap.id, snap.data(), company);
     } catch (err) {
       sheet.innerHTML = `<p>حصل خطأ أثناء التحميل: ${err.message}</p>`;
     }
@@ -39,10 +44,24 @@ function escapeHtml(str) {
   }[c]));
 }
 
-function render(id, q) {
+function render(id, q, company) {
   const rows = (q.lineItems || [])
     .map((it) => `<tr><td>${escapeHtml(it.description)}</td><td>${Number(it.price) || 0}</td></tr>`)
     .join("");
+
+  const companyLines = [
+    company.phone,
+    company.email,
+    company.address,
+    company.website,
+  ].filter(Boolean);
+
+  const footerHtml = `
+    <p class="credit">
+      <strong>${escapeHtml(company.name || "Media Made")}</strong>
+      ${companyLines.length ? "<br>" + companyLines.map(escapeHtml).join(" · ") : ""}
+    </p>
+  `;
 
   sheet.innerHTML = `
     <div class="head">
@@ -74,6 +93,6 @@ function render(id, q) {
 
     ${q.paymentTerms ? `<div class="section"><h2>شروط الدفع</h2><p>${escapeHtml(q.paymentTerms)}</p></div>` : ""}
 
-    <p class="credit">Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/">iegy.net</a> ©</p>
+    ${footerHtml}
   `;
 }
