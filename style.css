@@ -354,7 +354,7 @@ table.data-table {
 
 .data-table th,
 .data-table td {
-  text-align: right;
+  text-align: start;
   padding: 11px 14px;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
@@ -504,3 +504,78 @@ table.data-table {
 }
 
 .nav-alert-badge[hidden] { display: none; }
+
+/* ---------- Language toggle ---------- */
+
+.lang-toggle {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lang-toggle:hover { color: var(--ink); border-color: var(--accent-end); }
+
+.auth-lang-toggle {
+  position: absolute;
+  top: 20px;
+  inset-inline-end: 20px;
+}
+
+.auth-body { position: relative; }
+
+/* ---------- Auth split layout (professional two-panel login) ---------- */
+
+.auth-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.auth-brand-panel {
+  flex: 1 1 42%;
+  background: var(--gradient);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 32px;
+  text-align: center;
+}
+
+.brand-logo-lg {
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.auth-brand-panel h2 { font-size: 22px; margin: 0; font-weight: 800; }
+.auth-brand-panel p { margin: 0; opacity: 0.88; font-size: 14px; max-width: 300px; line-height: 1.75; }
+
+.auth-form-panel {
+  flex: 1 1 58%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+}
+
+.auth-card {
+  border: none;
+  box-shadow: 0 1px 2px rgba(30, 27, 46, 0.05), 0 10px 30px rgba(30, 27, 46, 0.06);
+}
+
+@media (max-width: 760px) {
+  .auth-shell { flex-direction: column; }
+  .auth-brand-panel { padding: 32px 24px; }
+  .brand-logo-lg { width: 60px; height: 60px; border-radius: 16px; }
+}

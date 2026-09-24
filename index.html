@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>تسجيل الدخول · Media Made</title>
+<title>Media Made</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -11,30 +11,39 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-body">
-  <main class="auth-card">
-    <div class="brand">
-      <img src="logo.png" alt="Media Made" class="brand-logo">
-      <span class="brand-word">Media Made</span>
+  <div class="auth-shell">
+    <div class="auth-brand-panel">
+      <img src="logo.png" alt="Media Made" class="brand-logo-lg">
+      <h2 data-i18n="brand">Media Made</h2>
+      <p data-i18n="login_sub">نظام إدارة العملاء والمشاريع الداخلي</p>
     </div>
-    <h1>تسجيل الدخول</h1>
-    <p class="auth-sub">نظام إدارة العملاء والمشاريع الداخلي</p>
 
-    <form id="login-form" novalidate>
-      <label for="email">البريد الإلكتروني</label>
-      <input type="email" id="email" required autocomplete="username">
+    <div class="auth-form-panel">
+      <button id="lang-toggle" class="lang-toggle auth-lang-toggle" type="button" data-i18n="lang_switch">English</button>
 
-      <label for="password">كلمة المرور</label>
-      <input type="password" id="password" required autocomplete="current-password">
+      <div>
+        <main class="auth-card">
+          <h1 data-i18n="login_title">تسجيل الدخول</h1>
 
-      <p id="login-error" class="form-error" role="alert"></p>
+          <form id="login-form" novalidate>
+            <label for="email" data-i18n="label_email">البريد الإلكتروني</label>
+            <input type="email" id="email" required autocomplete="username">
 
-      <button type="submit" id="login-submit" class="btn-primary">تسجيل الدخول</button>
-    </form>
-  </main>
+            <label for="password" data-i18n="label_password">كلمة المرور</label>
+            <input type="password" id="password" required autocomplete="current-password">
 
-  <footer class="credit-footer">
-    Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
-  </footer>
+            <p id="login-error" class="form-error" role="alert"></p>
+
+            <button type="submit" id="login-submit" class="btn-primary" data-i18n="btn_login">تسجيل الدخول</button>
+          </form>
+        </main>
+
+        <footer class="credit-footer">
+          Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+        </footer>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="login.js"></script>
 </body>

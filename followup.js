@@ -1,5 +1,6 @@
 import { db } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
+import { t } from "./i18n.js";
 import {
   collection,
   onSnapshot,
@@ -27,6 +28,8 @@ initAppShell(() => {
   watchClients();
 });
 
+document.addEventListener("mm:langchange", renderTable);
+
 function watchClients() {
   onSnapshot(
     collection(db, "clients"),
@@ -37,7 +40,7 @@ function watchClients() {
       renderTable();
     },
     (err) => {
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">تعذّر تحميل المتابعات: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${t("err_save_generic")}${err.message}</td></tr>`;
     }
   );
 }
@@ -63,7 +66,7 @@ function renderTable() {
   });
 
   if (rows.length === 0) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">مفيش عملاء نشطين محتاجين متابعة دلوقتي.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${t("empty_no_active_followups")}</td></tr>`;
     return;
   }
 
@@ -75,14 +78,14 @@ function renderTable() {
     let dueBadge = "";
     if (due) {
       if (due < today) {
-        dueBadge = `<span class="status-pill lost">${escapeHtml(due)} · متأخرة</span>`;
+        dueBadge = `<span class="status-pill lost">${escapeHtml(due)} · ${t("overdue_label")}</span>`;
       } else if (due === today) {
-        dueBadge = `<span class="status-pill active">${escapeHtml(due)} · النهاردة</span>`;
+        dueBadge = `<span class="status-pill active">${escapeHtml(due)} · ${t("today_label")}</span>`;
       } else {
         dueBadge = `<span class="status-pill neutral">${escapeHtml(due)}</span>`;
       }
     } else {
-      dueBadge = `<span class="status-pill neutral">غير محددة</span>`;
+      dueBadge = `<span class="status-pill neutral">${t("undated_label")}</span>`;
     }
 
     tr.innerHTML = `
@@ -92,7 +95,7 @@ function renderTable() {
       <td>${dueBadge}</td>
       <td class="wrap">${escapeHtml(c.nextStep || "—")}</td>
       <td>${escapeHtml(c.ownerName || "—")}</td>
-      <td><button class="icon-btn" data-id="${c.id}">تحديث المتابعة</button></td>
+      <td><button class="icon-btn" data-id="${c.id}">${t("btn_update_followup")}</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -130,7 +133,7 @@ form.addEventListener("submit", async (e) => {
   formError.textContent = "";
   const saveBtn = document.getElementById("save-btn");
   saveBtn.disabled = true;
-  saveBtn.textContent = "جاري الحفظ...";
+  saveBtn.textContent = t("btn_saving");
 
   try {
     await updateDoc(doc(db, "clients", fId.value), {
@@ -142,9 +145,9 @@ form.addEventListener("submit", async (e) => {
     });
     modal.hidden = true;
   } catch (err) {
-    formError.textContent = "حصل خطأ أثناء الحفظ: " + err.message;
+    formError.textContent = t("err_save_generic") + err.message;
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = "حفظ";
+    saveBtn.textContent = t("btn_save");
   }
 });

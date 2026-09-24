@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>عروض الأسعار · Media Made</title>
+<title data-i18n-title="page_title_quotations">Quotations · Media Made</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -15,10 +15,10 @@
     <aside class="sidebar">
       <div class="brand">
         <img src="logo.png" alt="Media Made" class="brand-logo">
-        <span class="brand-word">Media Made</span>
+        <span class="brand-word" data-i18n="brand">Media Made</span>
       </div>
 
-      <nav id="sidebar-nav" class="sidebar-nav" aria-label="القائمة الرئيسية"></nav>
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
 
       <div class="sidebar-spacer"></div>
 
@@ -29,7 +29,8 @@
           <span id="user-role" class="user-role">—</span>
         </div>
       </div>
-      <button id="logout-btn" class="btn-ghost" type="button">تسجيل الخروج</button>
+      <button id="lang-toggle-side" class="lang-toggle" type="button" style="width:100%; margin-top:10px;" data-i18n="lang_switch">English</button>
+      <button id="logout-btn" class="btn-ghost" type="button" data-i18n="btn_logout">تسجيل الخروج</button>
 
       <footer class="credit-footer credit-footer--sidebar">
         Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
@@ -38,16 +39,16 @@
 
     <div class="main">
       <header class="topbar">
-        <h1>عروض الأسعار</h1>
+        <h1 data-i18n="page_title_quotations">عروض الأسعار</h1>
       </header>
 
       <section class="content">
         <div class="toolbar">
-          <input id="search-input" class="search-input" type="text" placeholder="ابحث باسم العميل أو الخدمة...">
+          <input id="search-input" class="search-input" type="text" data-i18n-placeholder="search_quotes" placeholder="ابحث باسم العميل أو الخدمة...">
           <div style="display:flex; gap:10px;">
-            <button id="company-info-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden>بيانات الشركة</button>
-            <button id="price-list-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden>قائمة الأسعار</button>
-            <button id="add-quote-btn" class="btn-primary btn-primary--inline" type="button">+ عرض سعر جديد</button>
+            <button id="company-info-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden data-i18n="btn_company_info">بيانات الشركة</button>
+            <button id="price-list-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 16px;" hidden data-i18n="btn_price_list">قائمة الأسعار</button>
+            <button id="add-quote-btn" class="btn-primary btn-primary--inline" type="button" data-i18n="btn_add_quote">+ عرض سعر جديد</button>
           </div>
         </div>
 
@@ -55,12 +56,12 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>رقم العرض</th>
-                <th>العميل</th>
-                <th>الخدمة</th>
-                <th>الإجمالي</th>
-                <th>الحالة</th>
-                <th>صالح حتى</th>
+                <th data-i18n="th_quote_no">رقم العرض</th>
+                <th data-i18n="th_client">العميل</th>
+                <th data-i18n="th_service">الخدمة</th>
+                <th data-i18n="th_total">الإجمالي</th>
+                <th data-i18n="th_status">الحالة</th>
+                <th data-i18n="th_valid_until">صالح حتى</th>
                 <th></th>
               </tr>
             </thead>
@@ -76,65 +77,65 @@
   <!-- Modal: إضافة / تعديل عرض سعر -->
   <div id="quote-modal" class="modal-backdrop" hidden>
     <div class="modal-card" style="max-width:640px;">
-      <h2 id="modal-title">عرض سعر جديد</h2>
+      <h2 id="modal-title" data-i18n="modal_title_new_quote">عرض سعر جديد</h2>
       <form id="quote-form" novalidate>
         <input type="hidden" id="quote-id">
         <div class="field-grid">
           <div class="field field--full">
-            <label for="f-client">العميل *</label>
+            <label for="f-client" data-i18n="label_client_select">العميل *</label>
             <select id="f-client" required>
-              <option value="">اختر العميل...</option>
+              <option value="" data-i18n="option_choose_client">اختر العميل...</option>
             </select>
           </div>
           <div class="field field--full">
-            <label for="f-service">الخدمة</label>
+            <label for="f-service" data-i18n="label_service">الخدمة</label>
             <input type="text" id="f-service">
           </div>
           <div class="field field--full">
-            <label for="f-scope">Scope of Work</label>
+            <label for="f-scope" data-i18n="label_scope">Scope of Work</label>
             <textarea id="f-scope"></textarea>
           </div>
           <div class="field field--full">
-            <label for="f-deliverables">Deliverables</label>
+            <label for="f-deliverables" data-i18n="label_deliverables">Deliverables</label>
             <textarea id="f-deliverables"></textarea>
           </div>
 
           <div class="field field--full" style="border-top:1px solid var(--border); padding-top:12px;">
-            <label style="font-weight:700; color:var(--ink);">البنود والأسعار</label>
+            <label style="font-weight:700; color:var(--ink);" data-i18n="section_line_items">البنود والأسعار</label>
             <div id="line-items-wrap"></div>
             <div style="display:flex; gap:8px; margin-top:8px;">
               <select id="price-list-select" style="flex:1;">
-                <option value="">إضافة من قائمة الأسعار...</option>
+                <option value="" data-i18n="option_add_from_pricelist">إضافة من قائمة الأسعار...</option>
               </select>
-              <button type="button" id="add-from-list-btn" class="icon-btn">إضافة</button>
-              <button type="button" id="add-custom-line-btn" class="icon-btn">بند مخصص</button>
+              <button type="button" id="add-from-list-btn" class="icon-btn" data-i18n="btn_add_from_list">إضافة</button>
+              <button type="button" id="add-custom-line-btn" class="icon-btn" data-i18n="btn_custom_line">بند مخصص</button>
             </div>
-            <p style="margin:10px 0 0; font-weight:800;">الإجمالي: <span id="total-amount">0</span></p>
+            <p style="margin:10px 0 0; font-weight:800;"><span data-i18n="label_total_amount">الإجمالي:</span> <span id="total-amount">0</span></p>
           </div>
 
           <div class="field field--full">
-            <label for="f-terms">شروط الدفع</label>
+            <label for="f-terms" data-i18n="label_payment_terms">شروط الدفع</label>
             <textarea id="f-terms"></textarea>
           </div>
           <div class="field">
-            <label for="f-valid-until">صالح حتى تاريخ</label>
+            <label for="f-valid-until" data-i18n="label_valid_until">صالح حتى تاريخ</label>
             <input type="date" id="f-valid-until">
           </div>
           <div class="field">
-            <label for="f-status">حالة العرض</label>
+            <label for="f-status" data-i18n="label_quote_status">حالة العرض</label>
             <select id="f-status">
-              <option value="draft">مسودة</option>
-              <option value="sent">تم الإرسال</option>
-              <option value="approved">تمت الموافقة</option>
-              <option value="rejected">مرفوض</option>
-              <option value="expired">منتهي الصلاحية</option>
+              <option value="draft" data-i18n="qstatus_draft">مسودة</option>
+              <option value="sent" data-i18n="qstatus_sent">تم الإرسال</option>
+              <option value="approved" data-i18n="qstatus_approved">تمت الموافقة</option>
+              <option value="rejected" data-i18n="qstatus_rejected">مرفوض</option>
+              <option value="expired" data-i18n="qstatus_expired">منتهي الصلاحية</option>
             </select>
           </div>
         </div>
         <p id="form-error" class="form-error" role="alert"></p>
         <div class="modal-actions">
-          <button type="button" id="cancel-btn" class="btn-secondary">إلغاء</button>
-          <button type="submit" id="save-btn" class="btn-primary">حفظ</button>
+          <button type="button" id="cancel-btn" class="btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" id="save-btn" class="btn-primary" data-i18n="btn_save">حفظ</button>
         </div>
       </form>
     </div>
@@ -143,27 +144,27 @@
   <!-- Modal: قائمة الأسعار (إدارة بس) -->
   <div id="price-list-modal" class="modal-backdrop" hidden>
     <div class="modal-card">
-      <h2>قائمة الأسعار المعتمدة</h2>
+      <h2 data-i18n="title_price_list">قائمة الأسعار المعتمدة</h2>
       <div class="table-wrap" style="margin-bottom:14px;">
         <table class="data-table">
-          <thead><tr><th>الخدمة</th><th>السعر</th><th></th></tr></thead>
+          <thead><tr><th data-i18n="th_service_name">الخدمة</th><th data-i18n="th_price">السعر</th><th></th></tr></thead>
           <tbody id="price-list-tbody"></tbody>
         </table>
       </div>
       <div class="field-grid">
         <div class="field">
-          <label for="pl-name">اسم الخدمة</label>
+          <label for="pl-name" data-i18n="label_service_name">اسم الخدمة</label>
           <input type="text" id="pl-name">
         </div>
         <div class="field">
-          <label for="pl-price">السعر</label>
+          <label for="pl-price" data-i18n="label_price">السعر</label>
           <input type="number" id="pl-price" min="0">
         </div>
       </div>
       <p id="price-list-error" class="form-error"></p>
       <div class="modal-actions">
-        <button type="button" id="price-list-close-btn" class="btn-secondary">إغلاق</button>
-        <button type="button" id="price-list-add-btn" class="btn-primary">إضافة للقائمة</button>
+        <button type="button" id="price-list-close-btn" class="btn-secondary" data-i18n="btn_close">إغلاق</button>
+        <button type="button" id="price-list-add-btn" class="btn-primary" data-i18n="btn_add_to_list">إضافة للقائمة</button>
       </div>
     </div>
   </div>
@@ -171,34 +172,34 @@
   <!-- Modal: بيانات الشركة (بتظهر في عروض الأسعار المطبوعة) -->
   <div id="company-info-modal" class="modal-backdrop" hidden>
     <div class="modal-card">
-      <h2>بيانات الشركة</h2>
-      <p style="font-size:12.5px; color:var(--ink-muted); margin-top:-8px;">البيانات دي بتظهر في أسفل عروض الأسعار المطبوعة بدل بيانات المطوّر، وتقدروا تعدّلوها وقت ما تحبوا.</p>
+      <h2 data-i18n="title_company_info">بيانات الشركة</h2>
+      <p style="font-size:12.5px; color:var(--ink-muted); margin-top:-8px;" data-i18n="company_info_hint">البيانات دي بتظهر في أسفل عروض الأسعار المطبوعة بدل بيانات المطوّر، وتقدروا تعدّلوها وقت ما تحبوا.</p>
       <div class="field-grid">
         <div class="field field--full">
-          <label for="ci-name">اسم الشركة</label>
+          <label for="ci-name" data-i18n="label_company_name_field">اسم الشركة</label>
           <input type="text" id="ci-name" placeholder="Media Made">
         </div>
         <div class="field">
-          <label for="ci-phone">الهاتف</label>
+          <label for="ci-phone" data-i18n="label_company_phone">الهاتف</label>
           <input type="text" id="ci-phone">
         </div>
         <div class="field">
-          <label for="ci-email">البريد الإلكتروني</label>
+          <label for="ci-email" data-i18n="label_company_email">البريد الإلكتروني</label>
           <input type="email" id="ci-email">
         </div>
         <div class="field field--full">
-          <label for="ci-address">العنوان</label>
+          <label for="ci-address" data-i18n="label_company_address">العنوان</label>
           <input type="text" id="ci-address">
         </div>
         <div class="field field--full">
-          <label for="ci-website">الموقع الإلكتروني / السوشيال ميديا</label>
+          <label for="ci-website" data-i18n="label_company_website">الموقع الإلكتروني / السوشيال ميديا</label>
           <input type="text" id="ci-website">
         </div>
       </div>
       <p id="company-info-error" class="form-error"></p>
       <div class="modal-actions">
-        <button type="button" id="company-info-close-btn" class="btn-secondary">إغلاق</button>
-        <button type="button" id="company-info-save-btn" class="btn-primary">حفظ</button>
+        <button type="button" id="company-info-close-btn" class="btn-secondary" data-i18n="btn_close">إغلاق</button>
+        <button type="button" id="company-info-save-btn" class="btn-primary" data-i18n="btn_save">حفظ</button>
       </div>
     </div>
   </div>

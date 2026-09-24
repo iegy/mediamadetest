@@ -1,6 +1,7 @@
 import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
-import { CLIENT_STATUSES, statusLabel, statusGroup } from "./permissions.js";
+import { CLIENT_STATUS_KEYS, statusLabel, statusGroup } from "./permissions.js";
+import { t } from "./i18n.js";
 import {
   collection,
   query,
@@ -16,6 +17,7 @@ import {
 
 let currentRole = null;
 let allClients = [];
+let editingId = ""; // بيحدد لو المودال دلوقتي في وضع "تعديل" عشان عنوانه يتترجم صح مع تغيير اللغة
 
 const tbody = document.getElementById("clients-tbody");
 const searchInput = document.getElementById("search-input");
@@ -45,23 +47,27 @@ const fNextStep = document.getElementById("f-next-step");
 
 initAppShell((profile) => {
   currentRole = profile.role;
-  // الحذف متاح للإدارة وإدارة العملاء بس
-  const canDelete = currentRole === "management" || currentRole === "client_management";
-  document.body.classList.toggle("can-delete", canDelete);
-
   populateStatusOptions();
   loadOwners();
   watchClients();
 });
 
+document.addEventListener("mm:langchange", () => {
+  populateStatusOptions();
+  renderTable();
+  modalTitle.textContent = editingId ? t("modal_title_edit_client") : t("modal_title_new_client");
+});
+
 function populateStatusOptions() {
+  const current = fStatus.value;
   fStatus.innerHTML = "";
-  CLIENT_STATUSES.forEach((s) => {
+  CLIENT_STATUS_KEYS.forEach((s) => {
     const opt = document.createElement("option");
     opt.value = s.key;
-    opt.textContent = s.label;
+    opt.textContent = statusLabel(s.key);
     fStatus.appendChild(opt);
   });
+  if (current) fStatus.value = current;
 }
 
 async function loadOwners() {
@@ -77,7 +83,7 @@ async function loadOwners() {
     });
   } catch (err) {
     // لو مفيش صلاحية قراءة كل المستخدمين، الحقل يفضل بس "بدون تحديد"
-    console.warn("تعذّر تحميل قائمة المسؤولين:", err);
+    console.warn("Could not load the owners list:", err);
   }
 }
 
@@ -90,7 +96,7 @@ function watchClients() {
       renderTable();
     },
     (err) => {
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">تعذّر تحميل العملاء: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${t("err_save_generic")}${err.message}</td></tr>`;
     }
   );
 }
@@ -107,7 +113,7 @@ function renderTable() {
 
   if (filtered.length === 0) {
     tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${
-      allClients.length === 0 ? "لسه مفيش عملاء، دوس على «+ عميل جديد» عشان تضيف أول عميل." : "مفيش نتائج مطابقة للبحث."
+      allClients.length === 0 ? t("empty_no_clients") : t("empty_no_results")
     }</td></tr>`;
     return;
   }
@@ -123,8 +129,8 @@ function renderTable() {
       <td>${escapeHtml(c.ownerName || "—")}</td>
       <td>${escapeHtml(c.firstContactDate || "—")}</td>
       <td class="row-actions">
-        <button class="icon-btn" data-action="edit" data-id="${c.id}">تعديل</button>
-        <button class="icon-btn icon-btn--danger delete-btn" data-action="delete" data-id="${c.id}">حذف</button>
+        <button class="icon-btn" data-action="edit" data-id="${c.id}">${t("btn_edit")}</button>
+        <button class="icon-btn icon-btn--danger delete-btn" data-action="delete" data-id="${c.id}">${t("btn_delete")}</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -153,8 +159,9 @@ function escapeHtml(str) {
 function openAdd() {
   form.reset();
   fId.value = "";
+  editingId = "";
   fStatus.value = "new";
-  modalTitle.textContent = "عميل جديد";
+  modalTitle.textContent = t("modal_title_new_client");
   formError.textContent = "";
   modal.hidden = false;
 }
@@ -163,6 +170,7 @@ function openEdit(id) {
   const c = allClients.find((x) => x.id === id);
   if (!c) return;
   fId.value = c.id;
+  editingId = id;
   fName.value = c.name || "";
   fPhone.value = c.phone || "";
   fType.value = c.clientType || "";
@@ -177,7 +185,7 @@ function openEdit(id) {
   fNextFollowUpDate.value = c.nextFollowUpDate || "";
   fLastFollowUpNotes.value = c.lastFollowUpNotes || "";
   fNextStep.value = c.nextStep || "";
-  modalTitle.textContent = "تعديل بيانات العميل";
+  modalTitle.textContent = t("modal_title_edit_client");
   formError.textContent = "";
   modal.hidden = false;
 }
@@ -198,7 +206,7 @@ form.addEventListener("submit", async (e) => {
 
   const name = fName.value.trim();
   if (!name) {
-    formError.textContent = "اسم العميل مطلوب.";
+    formError.textContent = t("err_name_required");
     return;
   }
 
@@ -225,7 +233,7 @@ form.addEventListener("submit", async (e) => {
 
   const saveBtn = document.getElementById("save-btn");
   saveBtn.disabled = true;
-  saveBtn.textContent = "جاري الحفظ...";
+  saveBtn.textContent = t("btn_saving");
 
   try {
     if (fId.value) {
@@ -239,20 +247,20 @@ form.addEventListener("submit", async (e) => {
     }
     closeModal();
   } catch (err) {
-    formError.textContent = "حصل خطأ أثناء الحفظ: " + err.message;
+    formError.textContent = t("err_save_generic") + err.message;
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = "حفظ";
+    saveBtn.textContent = t("btn_save");
   }
 });
 
 async function handleDelete(id) {
   const c = allClients.find((x) => x.id === id);
-  const ok = confirm(`متأكد إنك عايز تحذف "${c ? c.name : "العميل"}"؟ الخطوة دي مش قابلة للتراجع.`);
+  const ok = confirm(t("confirm_delete_client", { name: c ? c.name : "" }));
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "clients", id));
   } catch (err) {
-    alert("تعذّر الحذف: " + err.message);
+    alert(t("err_delete_generic") + err.message);
   }
 }

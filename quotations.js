@@ -1,5 +1,6 @@
 import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
+import { t } from "./i18n.js";
 import {
   collection,
   query,
@@ -15,19 +16,24 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-const QUOTE_STATUS = {
-  draft: { label: "مسودة", group: "neutral" },
-  sent: { label: "تم الإرسال", group: "active" },
-  approved: { label: "تمت الموافقة", group: "success" },
-  rejected: { label: "مرفوض", group: "lost" },
-  expired: { label: "منتهي الصلاحية", group: "lost" },
+const QUOTE_STATUS_GROUPS = {
+  draft: "neutral",
+  sent: "active",
+  approved: "success",
+  rejected: "lost",
+  expired: "lost",
 };
+
+function quoteStatusLabel(status) {
+  return t(`qstatus_${status}`) || status;
+}
 
 let currentRole = null;
 let allQuotes = [];
 let allClients = [];
 let priceList = [];
 let currentLineItems = [];
+let editingId = "";
 
 const tbody = document.getElementById("quotes-tbody");
 const searchInput = document.getElementById("search-input");
@@ -68,19 +74,30 @@ initAppShell((profile) => {
   watchQuotes();
 });
 
+document.addEventListener("mm:langchange", () => {
+  loadClients();
+  renderPriceListSelect();
+  renderPriceListAdminTable();
+  renderTable();
+  renderLineItems();
+  modalTitle.textContent = editingId ? t("modal_title_edit_quote") : t("modal_title_new_quote");
+});
+
 // ---------- Data loading ----------
 
 async function loadClients() {
   const snap = await getDocs(collection(db, "clients"));
   allClients = snap.docs.map((d) => ({ id: d.id, name: d.data().name || d.id }));
   allClients.sort((a, b) => a.name.localeCompare(b.name, "ar"));
-  fClient.innerHTML = '<option value="">اختر العميل...</option>';
+  const selected = fClient.value;
+  fClient.innerHTML = `<option value="" data-i18n="option_choose_client">${t("option_choose_client")}</option>`;
   allClients.forEach((c) => {
     const opt = document.createElement("option");
     opt.value = c.id;
     opt.textContent = c.name;
     fClient.appendChild(opt);
   });
+  if (selected) fClient.value = selected;
 }
 
 function watchPriceList() {
@@ -93,7 +110,7 @@ function watchPriceList() {
 }
 
 function renderPriceListSelect() {
-  priceListSelect.innerHTML = '<option value="">إضافة من قائمة الأسعار...</option>';
+  priceListSelect.innerHTML = `<option value="">${t("option_add_from_pricelist")}</option>`;
   priceList.forEach((item) => {
     const opt = document.createElement("option");
     opt.value = item.id;
@@ -111,7 +128,7 @@ function watchQuotes() {
       renderTable();
     },
     (err) => {
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">تعذّر تحميل عروض الأسعار: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${t("err_save_generic")}${err.message}</td></tr>`;
     }
   );
 }
@@ -128,26 +145,26 @@ function renderTable() {
 
   if (filtered.length === 0) {
     tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${
-      allQuotes.length === 0 ? "لسه مفيش عروض أسعار، دوس على «+ عرض سعر جديد»." : "مفيش نتائج مطابقة."
+      allQuotes.length === 0 ? t("empty_no_quotes") : t("empty_no_results")
     }</td></tr>`;
     return;
   }
 
   tbody.innerHTML = "";
   filtered.forEach((q) => {
-    const st = QUOTE_STATUS[q.status] || QUOTE_STATUS.draft;
+    const group = QUOTE_STATUS_GROUPS[q.status] || "neutral";
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>Q-${q.id.slice(0, 6).toUpperCase()}</td>
       <td>${escapeHtml(q.clientName || "—")}</td>
       <td>${escapeHtml(q.service || "—")}</td>
       <td>${(q.total || 0).toLocaleString("en-US")}</td>
-      <td><span class="status-pill ${st.group}">${st.label}</span></td>
+      <td><span class="status-pill ${group}">${quoteStatusLabel(q.status)}</span></td>
       <td>${escapeHtml(q.validUntil || "—")}</td>
       <td class="row-actions">
-        <button class="icon-btn" data-action="print" data-id="${q.id}">PDF</button>
-        <button class="icon-btn" data-action="edit" data-id="${q.id}">تعديل</button>
-        <button class="icon-btn icon-btn--danger mgmt-only" data-action="delete" data-id="${q.id}">حذف</button>
+        <button class="icon-btn" data-action="print" data-id="${q.id}">${t("btn_pdf")}</button>
+        <button class="icon-btn" data-action="edit" data-id="${q.id}">${t("btn_edit")}</button>
+        <button class="icon-btn icon-btn--danger mgmt-only" data-action="delete" data-id="${q.id}">${t("btn_delete")}</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -180,9 +197,9 @@ function renderLineItems() {
     const row = document.createElement("div");
     row.style.cssText = "display:flex; gap:8px; margin-bottom:6px;";
     row.innerHTML = `
-      <input type="text" class="li-desc" data-idx="${idx}" value="${escapeHtml(item.description)}" placeholder="وصف البند" style="flex:2; padding:8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; background:var(--surface-alt);">
+      <input type="text" class="li-desc" data-idx="${idx}" value="${escapeHtml(item.description)}" style="flex:2; padding:8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; background:var(--surface-alt);">
       <input type="number" class="li-price" data-idx="${idx}" value="${item.price}" min="0" style="width:110px; padding:8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; background:var(--surface-alt);">
-      <button type="button" class="icon-btn icon-btn--danger li-remove" data-idx="${idx}">حذف</button>
+      <button type="button" class="icon-btn icon-btn--danger li-remove" data-idx="${idx}">${t("btn_delete")}</button>
     `;
     wrap.appendChild(row);
   });
@@ -233,11 +250,12 @@ document.getElementById("add-custom-line-btn").addEventListener("click", () => {
 function openAdd() {
   form.reset();
   fId.value = "";
+  editingId = "";
   fStatus.value = "draft";
   currentLineItems = [];
   renderLineItems();
   recomputeTotal();
-  modalTitle.textContent = "عرض سعر جديد";
+  modalTitle.textContent = t("modal_title_new_quote");
   formError.textContent = "";
   modal.hidden = false;
 }
@@ -246,6 +264,7 @@ function openEdit(id) {
   const q = allQuotes.find((x) => x.id === id);
   if (!q) return;
   fId.value = q.id;
+  editingId = id;
   fClient.value = q.clientId || "";
   fService.value = q.service || "";
   fScope.value = q.scopeOfWork || "";
@@ -256,7 +275,7 @@ function openEdit(id) {
   currentLineItems = (q.lineItems || []).map((it) => ({ ...it }));
   renderLineItems();
   recomputeTotal();
-  modalTitle.textContent = "تعديل عرض السعر";
+  modalTitle.textContent = t("modal_title_edit_quote");
   formError.textContent = "";
   modal.hidden = false;
 }
@@ -270,11 +289,11 @@ form.addEventListener("submit", async (e) => {
   formError.textContent = "";
 
   if (!fClient.value) {
-    formError.textContent = "اختر العميل.";
+    formError.textContent = t("err_choose_client");
     return;
   }
   if (currentLineItems.length === 0) {
-    formError.textContent = "أضف بند واحد على الأقل في العرض.";
+    formError.textContent = t("err_min_one_item");
     return;
   }
 
@@ -298,7 +317,7 @@ form.addEventListener("submit", async (e) => {
 
   const saveBtn = document.getElementById("save-btn");
   saveBtn.disabled = true;
-  saveBtn.textContent = "جاري الحفظ...";
+  saveBtn.textContent = t("btn_saving");
 
   try {
     if (fId.value) {
@@ -312,21 +331,21 @@ form.addEventListener("submit", async (e) => {
     }
     modal.hidden = true;
   } catch (err) {
-    formError.textContent = "حصل خطأ أثناء الحفظ: " + err.message;
+    formError.textContent = t("err_save_generic") + err.message;
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = "حفظ";
+    saveBtn.textContent = t("btn_save");
   }
 });
 
 async function handleDelete(id) {
   const q = allQuotes.find((x) => x.id === id);
-  const ok = confirm(`متأكد إنك عايز تحذف عرض السعر بتاع "${q ? q.clientName : ""}"؟`);
+  const ok = confirm(t("confirm_delete_quote", { name: q ? q.clientName : "" }));
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "quotations", id));
   } catch (err) {
-    alert("تعذّر الحذف: " + err.message);
+    alert(t("err_delete_generic") + err.message);
   }
 }
 
@@ -335,7 +354,7 @@ async function handleDelete(id) {
 function renderPriceListAdminTable() {
   plTbody.innerHTML = "";
   if (priceList.length === 0) {
-    plTbody.innerHTML = `<tr class="empty-row"><td colspan="3">لسه مفيش خدمات مضافة.</td></tr>`;
+    plTbody.innerHTML = `<tr class="empty-row"><td colspan="3">${t("empty_no_price_items")}</td></tr>`;
     return;
   }
   priceList.forEach((item) => {
@@ -343,13 +362,13 @@ function renderPriceListAdminTable() {
     tr.innerHTML = `
       <td>${escapeHtml(item.name)}</td>
       <td>${item.price}</td>
-      <td><button class="icon-btn icon-btn--danger" data-id="${item.id}">حذف</button></td>
+      <td><button class="icon-btn icon-btn--danger" data-id="${item.id}">${t("btn_delete")}</button></td>
     `;
     plTbody.appendChild(tr);
   });
   plTbody.querySelectorAll("[data-id]").forEach((b) =>
     b.addEventListener("click", async () => {
-      if (!confirm("حذف الخدمة دي من قائمة الأسعار؟")) return;
+      if (!confirm(t("confirm_delete_price_item"))) return;
       await deleteDoc(doc(db, "priceList", b.dataset.id));
     })
   );
@@ -364,7 +383,7 @@ document.getElementById("price-list-add-btn").addEventListener("click", async ()
   const name = plName.value.trim();
   const price = parseFloat(plPrice.value);
   if (!name || isNaN(price)) {
-    plError.textContent = "اكتب اسم الخدمة والسعر.";
+    plError.textContent = t("err_fill_name_price");
     return;
   }
   try {
@@ -372,7 +391,7 @@ document.getElementById("price-list-add-btn").addEventListener("click", async ()
     plName.value = "";
     plPrice.value = "";
   } catch (err) {
-    plError.textContent = "تعذّر الإضافة: " + err.message;
+    plError.textContent = t("err_save_generic") + err.message;
   }
 });
 
@@ -397,7 +416,7 @@ document.getElementById("company-info-btn").addEventListener("click", async () =
     ciAddress.value = data.address || "";
     ciWebsite.value = data.website || "";
   } catch (err) {
-    ciError.textContent = "تعذّر تحميل البيانات: " + err.message;
+    ciError.textContent = t("err_save_generic") + err.message;
   }
   ciModal.hidden = false;
 });
@@ -418,6 +437,6 @@ document.getElementById("company-info-save-btn").addEventListener("click", async
     });
     ciModal.hidden = true;
   } catch (err) {
-    ciError.textContent = "تعذّر الحفظ: " + err.message;
+    ciError.textContent = t("err_save_generic") + err.message;
   }
 });

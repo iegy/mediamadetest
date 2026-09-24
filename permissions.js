@@ -1,73 +1,69 @@
-// أسماء الأدوار زي ما هي متعرّفة في مستند المتطلبات (بند 2)
-export const ROLE_LABELS = {
-  management: "الإدارة",
-  client_management: "إدارة العملاء",
-  sales: "المبيعات",
-  production: "الإنتاج",
-  editor: "المونتاج",
-};
+import { t } from "./i18n.js";
 
-// عناصر القائمة الجانبية لكل دور.
-// built: false = الصفحة لسه مبنيتش، هتظهر باهتة وعليها "قريبًا" لحد ما نوصلها في الترتيب.
+// عناصر القائمة الجانبية لكل دور. labelKey بيتترجم وقت العرض عن طريق i18n.js.
+// built: false = الصفحة لسه مبنيتش، هتظهر باهتة وعليها badge "قريبًا/Soon" لحد ما نوصلها في الترتيب.
 export const NAV_ITEMS = {
   management: [
-    { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "clients", label: "العملاء", href: "clients.html", built: true },
-    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
-    { key: "projects", label: "المشاريع", href: "projects.html", built: false },
-    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: true },
-    { key: "calendar", label: "الكاليندر", href: "calendar.html", built: false },
-    { key: "payments", label: "المدفوعات", href: "payments.html", built: false },
-    { key: "expenses", label: "المصروفات", href: "expenses.html", built: false },
-    { key: "files", label: "الملفات", href: "files.html", built: false },
-    { key: "users", label: "المستخدمون والصلاحيات", href: "users.html", built: false },
-    { key: "activity", label: "سجل النشاط", href: "activity.html", built: false },
+    { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
+    { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
+    { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
+    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: false },
+    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
+    { key: "payments", labelKey: "nav_payments", href: "payments.html", built: false },
+    { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: false },
+    { key: "files", labelKey: "nav_files", href: "files.html", built: false },
+    { key: "users", labelKey: "nav_users", href: "users.html", built: false },
+    { key: "activity", labelKey: "nav_activity", href: "activity.html", built: false },
   ],
   client_management: [
-    { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "clients", label: "العملاء", href: "clients.html", built: true },
-    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
-    { key: "quotations", label: "عروض الأسعار", href: "quotations.html", built: true },
-    { key: "projects", label: "المشاريع", href: "projects.html", built: false },
+    { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
+    { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
+    { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
+    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: false },
   ],
   sales: [
-    { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "leads", label: "العملاء المسؤول عنهم", href: "clients.html", built: true },
-    { key: "followup", label: "المتابعات", href: "followup.html", built: true },
+    { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "leads", labelKey: "nav_leads", href: "clients.html", built: true },
+    { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
   ],
   production: [
-    { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "myprojects", label: "مشاريعي", href: "my-projects.html", built: false },
-    { key: "calendar", label: "الكاليندر", href: "calendar.html", built: false },
+    { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: false },
+    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
   ],
   editor: [
-    { key: "dashboard", label: "الرئيسية", href: "dashboard.html", built: true },
-    { key: "myprojects", label: "مشاريعي", href: "my-projects.html", built: false },
+    { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: false },
   ],
 };
 
-// حالات العميل زي ما هي في مستند المتطلبات (بند 3)، مقسّمة لمجموعات لونية للعرض
-export const CLIENT_STATUSES = [
-  { key: "new", label: "جديد", group: "neutral" },
-  { key: "contacted", label: "تم التواصل", group: "active" },
-  { key: "meeting", label: "اجتماع", group: "active" },
-  { key: "quotation_sent", label: "تم إرسال العرض", group: "active" },
-  { key: "negotiation", label: "تفاوض", group: "active" },
-  { key: "approved", label: "تمت الموافقة", group: "active" },
-  { key: "paid", label: "تم الدفع", group: "success" },
-  { key: "booked", label: "تم الحجز", group: "success" },
-  { key: "in_progress", label: "جاري التنفيذ", group: "success" },
-  { key: "delivered", label: "تم التسليم", group: "success" },
-  { key: "closed", label: "مغلق", group: "neutral" },
-  { key: "lost", label: "خسارة", group: "lost" },
+export function roleLabel(role) {
+  return t(`role_${role}`) || role;
+}
+
+// حالات العميل — المفاتيح بس هنا، النص بيتحدد وقت العرض عن طريق i18n.js
+export const CLIENT_STATUS_KEYS = [
+  { key: "new", group: "neutral" },
+  { key: "contacted", group: "active" },
+  { key: "meeting", group: "active" },
+  { key: "quotation_sent", group: "active" },
+  { key: "negotiation", group: "active" },
+  { key: "approved", group: "active" },
+  { key: "paid", group: "success" },
+  { key: "booked", group: "success" },
+  { key: "in_progress", group: "success" },
+  { key: "delivered", group: "success" },
+  { key: "closed", group: "neutral" },
+  { key: "lost", group: "lost" },
 ];
 
 export function statusLabel(key) {
-  const found = CLIENT_STATUSES.find((s) => s.key === key);
-  return found ? found.label : key;
+  return t(`status_${key}`) || key;
 }
 
 export function statusGroup(key) {
-  const found = CLIENT_STATUSES.find((s) => s.key === key);
+  const found = CLIENT_STATUS_KEYS.find((s) => s.key === key);
   return found ? found.group : "neutral";
 }

@@ -47,17 +47,17 @@
   }
   .brand-logo { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
   .brand-word { font-weight: 800; font-size: 18px; }
-  .quote-meta { text-align: left; font-size: 13px; color: var(--ink-muted); }
+  .quote-meta { text-align: end; font-size: 13px; color: var(--ink-muted); }
   h1 { font-size: 20px; margin: 0 0 4px; }
   .section { margin-bottom: 20px; }
   .section h2 { font-size: 14px; color: var(--ink-muted); margin: 0 0 6px; }
   .section p { margin: 0; white-space: pre-wrap; line-height: 1.7; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th, td { text-align: right; padding: 9px 8px; border-bottom: 1px solid var(--border); }
+  th, td { text-align: start; padding: 9px 8px; border-bottom: 1px solid var(--border); }
   th { color: var(--ink-muted); font-size: 12.5px; }
   tfoot td { font-weight: 800; border-top: 2px solid var(--border); border-bottom: none; }
   .status-line { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
-  .print-bar { max-width: 780px; margin: 0 auto 14px; text-align: left; }
+  .print-bar { max-width: 780px; margin: 0 auto 14px; text-align: end; }
   .print-btn {
     padding: 9px 18px; border: none; border-radius: 8px;
     background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
@@ -67,6 +67,11 @@
     text-align: center; font-size: 11.5px; color: var(--ink-muted); margin-top: 26px;
   }
   .credit a { color: var(--ink-muted); }
+  .lang-toggle {
+    border: 1px solid var(--border); background: #fff; color: var(--ink-muted);
+    font-family: inherit; font-size: 12.5px; font-weight: 700;
+    padding: 5px 12px; border-radius: 999px; cursor: pointer;
+  }
 
   @media print {
     body { background: #fff; padding: 0; }
@@ -76,12 +81,13 @@
 </style>
 </head>
 <body>
-  <div class="print-bar">
-    <button class="print-btn" onclick="window.print()">اطبع / احفظ كـ PDF</button>
+  <div class="print-bar" style="display:flex; gap:10px; justify-content:flex-end;">
+    <button id="lang-toggle" class="lang-toggle" type="button" data-i18n="lang_switch">English</button>
+    <button class="print-btn" onclick="window.print()" data-i18n="print_btn">اطبع / احفظ كـ PDF</button>
   </div>
 
   <main id="sheet" class="sheet">
-    <p>جاري تحميل عرض السعر...</p>
+    <p data-i18n="print_loading">جاري تحميل عرض السعر...</p>
   </main>
 
   <script type="module" src="quotation-print.js"></script>
