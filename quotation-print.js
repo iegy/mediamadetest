@@ -66,7 +66,7 @@ function render(id, q, company) {
   sheet.innerHTML = `
     <div class="head">
       <div class="brand">
-        <span class="brand-mark"></span>
+        <img src="logo.png" alt="Media Made" class="brand-logo">
         <span class="brand-word">Media Made</span>
       </div>
       <div class="quote-meta">

@@ -46,6 +46,14 @@ a { color: inherit; }
   flex-shrink: 0;
 }
 
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .brand-word {
   font-weight: 800;
   font-size: 17px;
