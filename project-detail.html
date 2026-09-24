@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-i18n-title="page_title_dashboard">Dashboard · Media Made</title>
+<title data-i18n-title="page_title_project_detail">Project Sheet · Media Made</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -38,34 +38,17 @@
     </aside>
 
     <div class="main">
-      <header class="topbar">
-        <h1 data-i18n="page_title_dashboard">الرئيسية</h1>
+      <header class="topbar" style="display:flex; align-items:center; justify-content:space-between;">
+        <h1 data-i18n="page_title_project_detail">صفحة المشروع</h1>
+        <a href="projects.html" class="icon-btn" data-i18n="back_to_projects">رجوع للمشاريع</a>
       </header>
 
-      <section class="content">
-        <div class="placeholder-grid">
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_clients">العملاء الحاليين</span>
-            <span id="stat-clients" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_projects">المشاريع الجارية</span>
-            <span id="stat-projects" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_followups">المتابعات المستحقة</span>
-            <span id="stat-followups" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_payments">المبالغ المستحقة</span>
-            <span class="placeholder-value">—</span>
-          </div>
-        </div>
-        <p class="content-note" data-i18n="dashboard_note">هيتم ربط الأرقام دي فعليًا بـ Firestore في مرحلة الـ Dashboard، بعد ما نبني موديولات العملاء والمشاريع والمدفوعات.</p>
+      <section class="content" id="sheet-content">
+        <p data-i18n="print_loading">جاري التحميل...</p>
       </section>
     </div>
   </div>
 
-  <script type="module" src="dashboard.js"></script>
+  <script type="module" src="project-detail.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ export const NAV_ITEMS = {
     { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
-    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: false },
+    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
     { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
     { key: "payments", labelKey: "nav_payments", href: "payments.html", built: false },
     { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: false },
@@ -21,7 +21,7 @@ export const NAV_ITEMS = {
     { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
-    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: false },
+    { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
   ],
   sales: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
@@ -30,12 +30,12 @@ export const NAV_ITEMS = {
   ],
   production: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
-    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: false },
+    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: true },
     { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
   ],
   editor: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
-    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: false },
+    { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: true },
   ],
 };
 
@@ -65,5 +65,45 @@ export function statusLabel(key) {
 
 export function statusGroup(key) {
   const found = CLIENT_STATUS_KEYS.find((s) => s.key === key);
+  return found ? found.group : "neutral";
+}
+
+// حالات المشروع (بند 7 في المستند)
+export const PROJECT_STATUS_KEYS = [
+  { key: "brief", group: "neutral" },
+  { key: "preparation", group: "active" },
+  { key: "shooting", group: "active" },
+  { key: "editing", group: "active" },
+  { key: "review", group: "active" },
+  { key: "client_approval", group: "active" },
+  { key: "delivery", group: "success" },
+  { key: "completed", group: "success" },
+];
+
+export function projectStatusLabel(key) {
+  return t(`pstatus_${key}`) || key;
+}
+
+export function projectStatusGroup(key) {
+  const found = PROJECT_STATUS_KEYS.find((s) => s.key === key);
+  return found ? found.group : "neutral";
+}
+
+// حالات المونتاج (بند 10 في المستند)
+export const EDITING_STATUS_KEYS = [
+  { key: "pending", group: "neutral" },
+  { key: "editing", group: "active" },
+  { key: "review", group: "active" },
+  { key: "revision", group: "active" },
+  { key: "approved", group: "success" },
+  { key: "delivered", group: "success" },
+];
+
+export function editingStatusLabel(key) {
+  return t(`estatus_${key}`) || key;
+}
+
+export function editingStatusGroup(key) {
+  const found = EDITING_STATUS_KEYS.find((s) => s.key === key);
   return found ? found.group : "neutral";
 }

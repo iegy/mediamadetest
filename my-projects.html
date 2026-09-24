@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-i18n-title="page_title_dashboard">Dashboard · Media Made</title>
+<title data-i18n-title="page_title_my_projects">My Projects · Media Made</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -39,33 +39,31 @@
 
     <div class="main">
       <header class="topbar">
-        <h1 data-i18n="page_title_dashboard">الرئيسية</h1>
+        <h1 data-i18n="page_title_my_projects">مشاريعي</h1>
       </header>
 
       <section class="content">
-        <div class="placeholder-grid">
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_clients">العملاء الحاليين</span>
-            <span id="stat-clients" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_projects">المشاريع الجارية</span>
-            <span id="stat-projects" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_followups">المتابعات المستحقة</span>
-            <span id="stat-followups" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_payments">المبالغ المستحقة</span>
-            <span class="placeholder-value">—</span>
-          </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="th_client">العميل</th>
+                <th data-i18n="th_service">الخدمة</th>
+                <th data-i18n="label_shoot_date">تاريخ التصوير</th>
+                <th data-i18n="label_shoot_location">مكان التصوير</th>
+                <th data-i18n="th_status">الحالة</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="my-projects-tbody">
+              <tr class="empty-row"><td colspan="6">...</td></tr>
+            </tbody>
+          </table>
         </div>
-        <p class="content-note" data-i18n="dashboard_note">هيتم ربط الأرقام دي فعليًا بـ Firestore في مرحلة الـ Dashboard، بعد ما نبني موديولات العملاء والمشاريع والمدفوعات.</p>
       </section>
     </div>
   </div>
 
-  <script type="module" src="dashboard.js"></script>
+  <script type="module" src="my-projects.js"></script>
 </body>
 </html>
