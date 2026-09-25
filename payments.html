@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n-title="page_title_payments">Payments · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="logo.png" alt="Media Made" class="brand-logo">
+        <span class="brand-word" data-i18n="brand">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="lang-toggle-side" class="lang-toggle" type="button" style="width:100%; margin-top:10px;" data-i18n="lang_switch">English</button>
+      <button id="logout-btn" class="btn-ghost" type="button" data-i18n="btn_logout">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 data-i18n="page_title_payments">المدفوعات</h1>
+      </header>
+
+      <section class="content">
+        <div class="placeholder-grid" style="margin-bottom:18px;">
+          <div class="placeholder-card">
+            <span class="placeholder-label" data-i18n="stat_collected">المبالغ المحصلة</span>
+            <span id="stat-collected" class="placeholder-value">—</span>
+          </div>
+          <div class="placeholder-card">
+            <span class="placeholder-label" data-i18n="stat_outstanding">المبالغ المستحقة</span>
+            <span id="stat-outstanding" class="placeholder-value">—</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input id="search-input" class="search-input" type="text" data-i18n-placeholder="search_projects" placeholder="ابحث باسم العميل أو الخدمة...">
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="th_client">العميل</th>
+                <th data-i18n="th_service">الخدمة</th>
+                <th data-i18n="th_project_total">إجمالي المشروع</th>
+                <th data-i18n="th_paid">المدفوع</th>
+                <th data-i18n="th_remaining">المتبقي</th>
+                <th data-i18n="th_status">الحالة</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="payments-tbody">
+              <tr class="empty-row"><td colspan="7">...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal: تسجيل دفعة -->
+  <div id="payment-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2 data-i18n="modal_title_log_payment">تسجيل دفعة</h2>
+      <p id="payment-project-label" style="font-size:13px; color:var(--ink-muted); margin-top:-8px;"></p>
+      <form id="payment-form" novalidate>
+        <input type="hidden" id="payment-project-id">
+        <div class="field-grid">
+          <div class="field">
+            <label for="p-amount" data-i18n="label_amount">المبلغ</label>
+            <input type="number" id="p-amount" min="0" step="0.01" required>
+          </div>
+          <div class="field">
+            <label for="p-date" data-i18n="label_payment_date">تاريخ الدفع</label>
+            <input type="date" id="p-date">
+          </div>
+          <div class="field field--full">
+            <label for="p-method" data-i18n="label_payment_method">طريقة الدفع</label>
+            <input type="text" id="p-method" data-i18n-placeholder="placeholder_payment_method" placeholder="كاش / تحويل بنكي / ...">
+          </div>
+          <div class="field field--full">
+            <label for="p-notes" data-i18n="label_notes">ملاحظات</label>
+            <textarea id="p-notes"></textarea>
+          </div>
+        </div>
+        <p id="payment-form-error" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" id="payment-cancel-btn" class="btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" id="payment-save-btn" class="btn-primary" data-i18n="btn_save">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: سجل المدفوعات -->
+  <div id="history-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2 data-i18n="modal_title_payment_history">سجل المدفوعات</h2>
+      <p id="history-project-label" style="font-size:13px; color:var(--ink-muted); margin-top:-8px;"></p>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_pay_date">التاريخ</th>
+              <th data-i18n="label_amount">المبلغ</th>
+              <th data-i18n="label_payment_method">طريقة الدفع</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="history-close-btn" class="btn-secondary" data-i18n="btn_close">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="payments.js"></script>
+</body>
+</html>

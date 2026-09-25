@@ -9,8 +9,8 @@ export const NAV_ITEMS = {
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
     { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
-    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
-    { key: "payments", labelKey: "nav_payments", href: "payments.html", built: false },
+    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
+    { key: "payments", labelKey: "nav_payments", href: "payments.html", built: true },
     { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: false },
     { key: "files", labelKey: "nav_files", href: "files.html", built: false },
     { key: "users", labelKey: "nav_users", href: "users.html", built: false },
@@ -22,6 +22,7 @@ export const NAV_ITEMS = {
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
     { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
+    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
   ],
   sales: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
@@ -31,7 +32,7 @@ export const NAV_ITEMS = {
   production: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
     { key: "myprojects", labelKey: "nav_myprojects", href: "my-projects.html", built: true },
-    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: false },
+    { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
   ],
   editor: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },

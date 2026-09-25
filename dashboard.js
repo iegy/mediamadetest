@@ -11,6 +11,7 @@ initAppShell((profile) => {
   // فبنحاول نجيبها ونتجاهل بهدوء لو الدور مالوش صلاحية عليها
   watchProjectsCount();
   watchFollowUpsCount(profile.role);
+  watchOutstandingPayments(profile.role);
 });
 
 function watchClientsCount() {
@@ -60,4 +61,32 @@ function watchFollowUpsCount(role) {
     },
     () => { statEl.textContent = "—"; }
   );
+}
+
+function watchOutstandingPayments(role) {
+  const statEl = document.getElementById("stat-payments");
+  if (!statEl) return;
+  // المدفوعات مقصورة على الإدارة بس (زي صلاحياتها بالظبط)
+  if (role !== "management") {
+    statEl.textContent = "—";
+    return;
+  }
+  let projects = [];
+  let payments = [];
+  const recompute = () => {
+    const paidFor = (id) => payments.filter((p) => p.projectId === id).reduce((s, p) => s + (Number(p.amount) || 0), 0);
+    const outstanding = projects.reduce((s, p) => {
+      const remaining = (Number(p.projectValue) || 0) - paidFor(p.id);
+      return s + (remaining > 0 ? remaining : 0);
+    }, 0);
+    statEl.textContent = outstanding.toLocaleString("en-US");
+  };
+  onSnapshot(collection(db, "projects"), (snap) => {
+    projects = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    recompute();
+  }, () => { statEl.textContent = "—"; });
+  onSnapshot(collection(db, "payments"), (snap) => {
+    payments = snap.docs.map((d) => d.data());
+    recompute();
+  }, () => { statEl.textContent = "—"; });
 }

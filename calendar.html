@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-i18n-title="page_title_dashboard">Dashboard · Media Made</title>
+<title data-i18n-title="page_title_calendar">Calendar · Media Made</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -39,32 +39,29 @@
 
     <div class="main">
       <header class="topbar">
-        <h1 data-i18n="page_title_dashboard">الرئيسية</h1>
+        <h1 data-i18n="page_title_calendar">الكاليندر</h1>
       </header>
 
       <section class="content">
-        <div class="placeholder-grid">
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_clients">العملاء الحاليين</span>
-            <span id="stat-clients" class="placeholder-value">—</span>
+        <div class="cal-toolbar">
+          <div class="cal-nav">
+            <button id="cal-prev" class="icon-btn" type="button">‹</button>
+            <span id="cal-month-label" class="cal-month-label"></span>
+            <button id="cal-next" class="icon-btn" type="button">›</button>
+            <button id="cal-today" class="icon-btn" type="button" data-i18n="btn_today">النهاردة</button>
           </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_projects">المشاريع الجارية</span>
-            <span id="stat-projects" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_followups">المتابعات المستحقة</span>
-            <span id="stat-followups" class="placeholder-value">—</span>
-          </div>
-          <div class="placeholder-card">
-            <span class="placeholder-label" data-i18n="stat_payments">المبالغ المستحقة</span>
-            <span id="stat-payments" class="placeholder-value">—</span>
+          <div class="cal-legend">
+            <span><span class="cal-legend-dot shoot"></span><span data-i18n="legend_shoot">تصوير</span></span>
+            <span><span class="cal-legend-dot delivery"></span><span data-i18n="legend_delivery">تسليم</span></span>
           </div>
         </div>
+
+        <div id="cal-weekdays" class="cal-grid" style="margin-bottom:4px;"></div>
+        <div id="cal-grid" class="cal-grid"></div>
       </section>
     </div>
   </div>
 
-  <script type="module" src="dashboard.js"></script>
+  <script type="module" src="calendar.js"></script>
 </body>
 </html>

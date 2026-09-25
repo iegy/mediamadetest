@@ -248,6 +248,36 @@ export const STRINGS = {
     page_title_my_projects: "مشاريعي",
     empty_no_assigned_projects: "لسه مفيش مشاريع متسندة ليك.",
     btn_open_sheet: "فتح صفحة المشروع",
+
+    // Calendar
+    page_title_calendar: "الكاليندر",
+    btn_today: "النهاردة",
+    legend_shoot: "تصوير",
+    legend_delivery: "تسليم",
+    no_events_day: "مفيش مواعيد في اليوم ده.",
+
+    // Payments
+    page_title_payments: "المدفوعات",
+    stat_collected: "المبالغ المحصلة",
+    stat_outstanding: "المبالغ المستحقة",
+    th_project_total: "إجمالي المشروع",
+    th_paid: "المدفوع",
+    th_remaining: "المتبقي",
+    btn_log_payment: "تسجيل دفعة",
+    btn_history: "السجل",
+    pay_status_unpaid: "غير مدفوع",
+    pay_status_partial: "مدفوع جزئيًا",
+    pay_status_paid: "مدفوع بالكامل",
+    modal_title_log_payment: "تسجيل دفعة",
+    label_amount: "المبلغ",
+    label_payment_date: "تاريخ الدفع",
+    label_payment_method: "طريقة الدفع",
+    placeholder_payment_method: "كاش / تحويل بنكي / ...",
+    modal_title_payment_history: "سجل المدفوعات",
+    empty_no_payments_yet: "لسه مفيش دفعات مسجلة.",
+    th_pay_date: "التاريخ",
+    confirm_delete_payment: "حذف الدفعة دي؟",
+    err_amount_required: "اكتب مبلغ صحيح.",
   },
 
   en: {
@@ -489,6 +519,36 @@ export const STRINGS = {
     page_title_my_projects: "My Projects",
     empty_no_assigned_projects: "No projects assigned to you yet.",
     btn_open_sheet: "Open Project Sheet",
+
+    // Calendar
+    page_title_calendar: "Calendar",
+    btn_today: "Today",
+    legend_shoot: "Shoot",
+    legend_delivery: "Delivery",
+    no_events_day: "No events on this day.",
+
+    // Payments
+    page_title_payments: "Payments",
+    stat_collected: "Amount Collected",
+    stat_outstanding: "Amount Outstanding",
+    th_project_total: "Project Total",
+    th_paid: "Paid",
+    th_remaining: "Remaining",
+    btn_log_payment: "Log Payment",
+    btn_history: "History",
+    pay_status_unpaid: "Unpaid",
+    pay_status_partial: "Partially Paid",
+    pay_status_paid: "Fully Paid",
+    modal_title_log_payment: "Log Payment",
+    label_amount: "Amount",
+    label_payment_date: "Payment Date",
+    label_payment_method: "Payment Method",
+    placeholder_payment_method: "Cash / Bank transfer / ...",
+    modal_title_payment_history: "Payment History",
+    empty_no_payments_yet: "No payments logged yet.",
+    th_pay_date: "Date",
+    confirm_delete_payment: "Delete this payment?",
+    err_amount_required: "Enter a valid amount.",
   },
 };
 
