@@ -11,7 +11,7 @@ export const NAV_ITEMS = {
     { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
     { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
     { key: "payments", labelKey: "nav_payments", href: "payments.html", built: true },
-    { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: false },
+    { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: true },
     { key: "files", labelKey: "nav_files", href: "files.html", built: false },
     { key: "users", labelKey: "nav_users", href: "users.html", built: false },
     { key: "activity", labelKey: "nav_activity", href: "activity.html", built: false },

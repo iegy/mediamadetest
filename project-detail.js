@@ -6,6 +6,7 @@ import {
 } from "./permissions.js";
 import { t, getLang } from "./i18n.js";
 import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { findOrCreateFolder, uploadFile, shareFile } from "./drive.js";
 
 const content = document.getElementById("sheet-content");
 const projectId = new URLSearchParams(window.location.search).get("id");
@@ -13,16 +14,25 @@ const projectId = new URLSearchParams(window.location.search).get("id");
 let currentRole = null;
 let project = null;
 let fullEdit = false; // management / client_management
+let companyDriveEmail = "";
 
 initAppShell((profile) => {
   currentRole = profile.role;
   fullEdit = currentRole === "management" || currentRole === "client_management";
+  loadCompanySettings();
   loadProject();
 });
 
 document.addEventListener("mm:langchange", () => {
   if (project) render();
 });
+
+async function loadCompanySettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "company"));
+    if (snap.exists()) companyDriveEmail = snap.data().driveEmail || "";
+  } catch (e) { /* لو مفيش صلاحية، هيكمل من غير مشاركة تلقائية */ }
+}
 
 async function loadProject() {
   if (!projectId) {
@@ -117,19 +127,73 @@ function render() {
 
         ${fullEdit ? textAreaBlock("section_project_notes", "f-notes", p.notes)
                    : textBlock("section_project_notes", p.notes)}
-
-        <div class="field field--full" style="border-top:1px solid var(--border); padding-top:12px;">
-          <label style="font-weight:700; color:var(--ink);">${t("section_files_placeholder")}</label>
-          <p style="font-size:13px; color:var(--ink-muted); margin:4px 0 0;">${t("files_coming_soon_note")}</p>
-        </div>
       </div>
 
       <p id="form-error" class="form-error" role="alert"></p>
       <button type="submit" id="save-btn" class="btn-primary btn-primary--inline" style="margin-top:14px;">${t("btn_save")}</button>
     </form>
+
+    <div class="field field--full" style="border-top:1px solid var(--border); padding-top:14px; margin-top:20px;">
+      <label style="font-weight:700; color:var(--ink);">${t("section_files_placeholder")}</label>
+      <div id="files-list" style="display:flex; flex-direction:column; gap:6px; margin:10px 0;"></div>
+      <button type="button" id="upload-file-btn" class="btn-secondary" style="width:auto; padding:9px 16px;">${t("btn_upload_file")}</button>
+      <input type="file" id="file-input" hidden>
+      <p id="upload-status" style="font-size:12.5px; color:var(--ink-muted); margin:8px 0 0;"></p>
+    </div>
   `;
 
   document.getElementById("sheet-form").addEventListener("submit", onSave);
+  renderFilesList();
+  document.getElementById("upload-file-btn").addEventListener("click", () => document.getElementById("file-input").click());
+  document.getElementById("file-input").addEventListener("change", onFileChosen);
+}
+
+function renderFilesList() {
+  const wrap = document.getElementById("files-list");
+  const files = project.files || [];
+  if (files.length === 0) {
+    wrap.innerHTML = `<p style="font-size:13px; color:var(--ink-muted); margin:0;">${t("no_files_yet")}</p>`;
+    return;
+  }
+  wrap.innerHTML = files.map((f) => `
+    <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener" class="icon-btn" style="width:fit-content; text-decoration:none;">
+      📄 ${escapeHtml(f.fileName)}
+    </a>
+  `).join("");
+}
+
+async function onFileChosen(e) {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+
+  const statusEl = document.getElementById("upload-status");
+  statusEl.textContent = t("uploading_msg");
+
+  try {
+    const folderName = `MediaMade - ${project.clientName || ""} - ${project.service || ""}`.trim();
+    const folderId = await findOrCreateFolder(folderName);
+    const uploaded = await uploadFile(file, folderId);
+    if (companyDriveEmail) {
+      try { await shareFile(uploaded.id, companyDriveEmail, "reader"); }
+      catch (shareErr) { console.warn("Could not auto-share with company Drive:", shareErr); }
+    }
+
+    const meta = {
+      driveFileId: uploaded.id,
+      fileName: uploaded.name,
+      webViewLink: uploaded.webViewLink,
+      uploadedBy: auth.currentUser ? auth.currentUser.uid : null,
+      uploadedAt: new Date().toISOString(),
+    };
+    const newFiles = [...(project.files || []), meta];
+    await updateDoc(doc(db, "projects", projectId), { files: newFiles, updatedAt: serverTimestamp() });
+    project.files = newFiles;
+    renderFilesList();
+    statusEl.textContent = "";
+  } catch (err) {
+    statusEl.textContent = t("upload_error") + err.message;
+  }
 }
 
 async function onSave(e) {

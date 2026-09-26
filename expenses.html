@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n-title="page_title_expenses">Expenses · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="logo.png" alt="Media Made" class="brand-logo">
+        <span class="brand-word" data-i18n="brand">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="lang-toggle-side" class="lang-toggle" type="button" style="width:100%; margin-top:10px;" data-i18n="lang_switch">English</button>
+      <button id="logout-btn" class="btn-ghost" type="button" data-i18n="btn_logout">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 data-i18n="page_title_expenses">المصروفات</h1>
+      </header>
+
+      <section class="content">
+        <div class="placeholder-grid" style="margin-bottom:18px; max-width:260px;">
+          <div class="placeholder-card">
+            <span class="placeholder-label" data-i18n="stat_total_expenses">إجمالي المصروفات</span>
+            <span id="stat-total-expenses" class="placeholder-value">—</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input id="search-input" class="search-input" type="text" data-i18n-placeholder="search_expenses" placeholder="ابحث باسم المصروف أو النوع...">
+          <button id="add-expense-btn" class="btn-primary btn-primary--inline" type="button" data-i18n="btn_add_expense">+ مصروف جديد</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="label_expense_name">اسم المصروف</th>
+                <th data-i18n="label_expense_category">نوع المصروف</th>
+                <th data-i18n="label_expense_value">قيمة المصروف</th>
+                <th data-i18n="th_pay_date">التاريخ</th>
+                <th data-i18n="label_linked_project">المشروع المرتبط به</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="expenses-tbody">
+              <tr class="empty-row"><td colspan="6">...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal: إضافة / تعديل مصروف -->
+  <div id="expense-modal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <h2 id="modal-title" data-i18n="modal_title_new_expense">مصروف جديد</h2>
+      <form id="expense-form" novalidate>
+        <input type="hidden" id="expense-id">
+        <div class="field-grid">
+          <div class="field field--full">
+            <label for="f-name" data-i18n="label_expense_name">اسم المصروف *</label>
+            <input type="text" id="f-name" required>
+          </div>
+          <div class="field">
+            <label for="f-amount" data-i18n="label_expense_value">قيمة المصروف</label>
+            <input type="number" id="f-amount" min="0" step="0.01">
+          </div>
+          <div class="field">
+            <label for="f-date" data-i18n="th_pay_date">التاريخ</label>
+            <input type="date" id="f-date">
+          </div>
+          <div class="field">
+            <label for="f-category" data-i18n="label_expense_category">نوع المصروف</label>
+            <input type="text" id="f-category">
+          </div>
+          <div class="field">
+            <label for="f-project" data-i18n="label_linked_project">المشروع المرتبط به</label>
+            <select id="f-project">
+              <option value="" data-i18n="option_no_project">بدون مشروع</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="f-notes" data-i18n="label_notes">ملاحظات</label>
+            <textarea id="f-notes"></textarea>
+          </div>
+        </div>
+        <p id="form-error" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn-secondary" data-i18n="btn_cancel">إلغاء</button>
+          <button type="submit" id="save-btn" class="btn-primary" data-i18n="btn_save">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="expenses.js"></script>
+</body>
+</html>

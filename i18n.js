@@ -278,6 +278,29 @@ export const STRINGS = {
     th_pay_date: "التاريخ",
     confirm_delete_payment: "حذف الدفعة دي؟",
     err_amount_required: "اكتب مبلغ صحيح.",
+
+    // Expenses
+    page_title_expenses: "المصروفات",
+    stat_total_expenses: "إجمالي المصروفات",
+    search_expenses: "ابحث باسم المصروف أو النوع...",
+    btn_add_expense: "+ مصروف جديد",
+    label_expense_name: "اسم المصروف",
+    label_expense_value: "قيمة المصروف",
+    label_expense_category: "نوع المصروف",
+    label_linked_project: "المشروع المرتبط به",
+    option_no_project: "بدون مشروع",
+    modal_title_new_expense: "مصروف جديد",
+    modal_title_edit_expense: "تعديل المصروف",
+    confirm_delete_expense: 'متأكد إنك عايز تحذف "{name}"؟',
+    empty_no_expenses: "لسه مفيش مصروفات مسجلة.",
+
+    // Files / Google Drive
+    btn_upload_file: "ارفع ملف",
+    uploading_msg: "جاري الرفع...",
+    upload_error: "حصل خطأ أثناء الرفع: ",
+    no_files_yet: "لسه مفيش ملفات مرفوعة.",
+    label_drive_email: "إيميل درايف الشركة (لمشاركة الملفات تلقائيًا)",
+    drive_setup_needed: "لازم تضبط بيانات Google Drive الأول (Client ID) — راجع الـ README.",
   },
 
   en: {
@@ -549,6 +572,29 @@ export const STRINGS = {
     th_pay_date: "Date",
     confirm_delete_payment: "Delete this payment?",
     err_amount_required: "Enter a valid amount.",
+
+    // Expenses
+    page_title_expenses: "Expenses",
+    stat_total_expenses: "Total Expenses",
+    search_expenses: "Search by expense name or type...",
+    btn_add_expense: "+ New Expense",
+    label_expense_name: "Expense Name",
+    label_expense_value: "Expense Amount",
+    label_expense_category: "Expense Type",
+    label_linked_project: "Linked Project",
+    option_no_project: "No Project",
+    modal_title_new_expense: "New Expense",
+    modal_title_edit_expense: "Edit Expense",
+    confirm_delete_expense: 'Are you sure you want to delete "{name}"?',
+    empty_no_expenses: "No expenses logged yet.",
+
+    // Files / Google Drive
+    btn_upload_file: "Upload File",
+    uploading_msg: "Uploading...",
+    upload_error: "Error while uploading: ",
+    no_files_yet: "No files uploaded yet.",
+    label_drive_email: "Company Drive Email (for auto-sharing files)",
+    drive_setup_needed: "You need to set up Google Drive credentials first (Client ID) — see the README.",
   },
 };
 

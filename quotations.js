@@ -403,6 +403,7 @@ const ciPhone = document.getElementById("ci-phone");
 const ciEmail = document.getElementById("ci-email");
 const ciAddress = document.getElementById("ci-address");
 const ciWebsite = document.getElementById("ci-website");
+const ciDriveEmail = document.getElementById("ci-drive-email");
 const ciError = document.getElementById("company-info-error");
 
 document.getElementById("company-info-btn").addEventListener("click", async () => {
@@ -415,6 +416,7 @@ document.getElementById("company-info-btn").addEventListener("click", async () =
     ciEmail.value = data.email || "";
     ciAddress.value = data.address || "";
     ciWebsite.value = data.website || "";
+    ciDriveEmail.value = data.driveEmail || "";
   } catch (err) {
     ciError.textContent = t("err_save_generic") + err.message;
   }
@@ -433,6 +435,7 @@ document.getElementById("company-info-save-btn").addEventListener("click", async
       email: ciEmail.value.trim(),
       address: ciAddress.value.trim(),
       website: ciWebsite.value.trim(),
+      driveEmail: ciDriveEmail.value.trim(),
       updatedAt: serverTimestamp(),
     });
     ciModal.hidden = true;
