@@ -156,9 +156,15 @@ function renderFilesList() {
     return;
   }
   wrap.innerHTML = files.map((f) => `
-    <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener" class="icon-btn" style="width:fit-content; text-decoration:none;">
-      📄 ${escapeHtml(f.fileName)}
-    </a>
+    <div style="border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface);">
+      <iframe src="https://drive.google.com/file/d/${encodeURIComponent(f.driveFileId)}/preview"
+        style="width:100%; height:220px; border:none; display:block;" loading="lazy"
+        allow="autoplay"></iframe>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; font-size:12.5px;">
+        <span>${escapeHtml(f.fileName)}</span>
+        <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>
+      </div>
+    </div>
   `).join("");
 }
 
@@ -183,6 +189,7 @@ async function onFileChosen(e) {
       driveFileId: uploaded.id,
       fileName: uploaded.name,
       webViewLink: uploaded.webViewLink,
+      mimeType: uploaded.mimeType || "",
       uploadedBy: auth.currentUser ? auth.currentUser.uid : null,
       uploadedAt: new Date().toISOString(),
     };

@@ -300,6 +300,9 @@ export const STRINGS = {
     upload_error: "حصل خطأ أثناء الرفع: ",
     no_files_yet: "لسه مفيش ملفات مرفوعة.",
     label_drive_email: "إيميل درايف الشركة (لمشاركة الملفات تلقائيًا)",
+    open_in_drive: "افتح في Drive",
+    drive_group_hint_prefix: "لو عايز الفريق كله يقدر يشوف الملفات (مش بس حساب واحد)، اعمل",
+    drive_group_hint_suffix: "مجاني، ضيف إيميلات الموظفين فيه، وحط إيميل الجروب هنا بدل إيميل شخصي.",
     drive_setup_needed: "لازم تضبط بيانات Google Drive الأول (Client ID) — راجع الـ README.",
   },
 
@@ -594,6 +597,9 @@ export const STRINGS = {
     upload_error: "Error while uploading: ",
     no_files_yet: "No files uploaded yet.",
     label_drive_email: "Company Drive Email (for auto-sharing files)",
+    open_in_drive: "Open in Drive",
+    drive_group_hint_prefix: "If you want the whole team to see the files (not just one account), create a",
+    drive_group_hint_suffix: "for free, add the team\u2019s emails to it, and put the group\u2019s email here instead of a personal one.",
     drive_setup_needed: "You need to set up Google Drive credentials first (Client ID) — see the README.",
   },
 };
