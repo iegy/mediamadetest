@@ -12,9 +12,10 @@ export const NAV_ITEMS = {
     { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
     { key: "payments", labelKey: "nav_payments", href: "payments.html", built: true },
     { key: "expenses", labelKey: "nav_expenses", href: "expenses.html", built: true },
-    { key: "files", labelKey: "nav_files", href: "files.html", built: false },
-    { key: "users", labelKey: "nav_users", href: "users.html", built: false },
-    { key: "activity", labelKey: "nav_activity", href: "activity.html", built: false },
+    { key: "files", labelKey: "nav_files", href: "files.html", built: true },
+    { key: "users", labelKey: "nav_users", href: "users.html", built: true },
+    { key: "activity", labelKey: "nav_activity", href: "activity.html", built: true },
+    { key: "backup", labelKey: "nav_backup", href: "backup.html", built: true },
   ],
   client_management: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
@@ -23,6 +24,7 @@ export const NAV_ITEMS = {
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
     { key: "projects", labelKey: "nav_projects", href: "projects.html", built: true },
     { key: "calendar", labelKey: "nav_calendar", href: "calendar.html", built: true },
+    { key: "files", labelKey: "nav_files", href: "files.html", built: true },
   ],
   sales: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n-title="page_title_backup">Backup · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="logo.png" alt="Media Made" class="brand-logo">
+        <span class="brand-word" data-i18n="brand">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="lang-toggle-side" class="lang-toggle" type="button" style="width:100%; margin-top:10px;" data-i18n="lang_switch">English</button>
+      <button id="logout-btn" class="btn-ghost" type="button" data-i18n="btn_logout">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        Designed &amp; Developed by Mohammed Hussein · <a href="https://iegy.net/" target="_blank" rel="noopener">iegy.net</a> ©
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 data-i18n="page_title_backup">النسخ الاحتياطي</h1>
+      </header>
+
+      <section class="content" style="max-width:560px;">
+        <div class="table-wrap" style="padding:20px; margin-bottom:20px;">
+          <h2 style="margin:0 0 6px; font-size:16px;" data-i18n="section_export">تصدير البيانات</h2>
+          <p style="font-size:13px; color:var(--ink-muted); margin:0 0 14px;" data-i18n="export_hint">
+            هيتم تنزيل ملف JSON فيه كل بيانات النظام.
+          </p>
+          <button id="export-btn" class="btn-primary btn-primary--inline" type="button" data-i18n="btn_export">تنزيل نسخة احتياطية</button>
+          <p id="export-status" style="font-size:12.5px; color:var(--ink-muted); margin:10px 0 0;"></p>
+        </div>
+
+        <div class="table-wrap" style="padding:20px;">
+          <h2 style="margin:0 0 6px; font-size:16px;" data-i18n="section_import">استيراد البيانات</h2>
+          <p style="font-size:13px; color:var(--danger); margin:0 0 14px;" data-i18n="import_warning">
+            الاستيراد بيضيف سجلات جديدة فوق الموجود، مش بيستبدله.
+          </p>
+          <input type="file" id="import-file" accept="application/json" style="margin-bottom:12px; display:block;">
+          <button id="import-btn" class="btn-secondary" type="button" style="width:auto; padding:9px 18px;" data-i18n="btn_import">استيراد</button>
+          <p id="import-status" style="font-size:12.5px; color:var(--ink-muted); margin:10px 0 0;"></p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="backup.js"></script>
+</body>
+</html>
