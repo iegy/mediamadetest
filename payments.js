@@ -1,6 +1,7 @@
 import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
@@ -170,6 +171,7 @@ payForm.addEventListener("submit", async (e) => {
       createdBy: auth.currentUser ? auth.currentUser.uid : null,
     });
     payModal.hidden = true;
+    logActivity("act_payment_logged", `${p ? p.clientName : ""} — ${amount}`);
   } catch (err) {
     payError.textContent = t("err_save_generic") + err.message;
   } finally {

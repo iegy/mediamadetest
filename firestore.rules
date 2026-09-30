@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function hasRole(roles) {
+      return isSignedIn() && myRole() in roles;
+    }
+
+    // كل مستخدم مسجل يقدر يقرأ ملفات المستخدمين (عشان الأدوار تتعرض في الواجهة)،
+    // بس الإدارة بس اللي تقدر تعدّل الأدوار
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if hasRole(['management']);
+    }
+
+    // العملاء: الإدارة، إدارة العملاء، والمبيعات يضيفوا ويعدّلوا
+    // الحذف مقصور على الإدارة وإدارة العملاء فقط
+    match /clients/{clientId} {
+      allow read, create, update: if hasRole(['management', 'client_management', 'sales']);
+      allow delete: if hasRole(['management', 'client_management']);
+    }
+
+    // المشاريع: الإدارة وإدارة العملاء يشوفوا ويعدّلوا كل حاجة.
+    // الإنتاج والمونتاج يشوفوا بس المشاريع اللي هما جزء من فريقها (teamIds)،
+    // ويقدروا يعدّلوا حالة التنفيذ/المونتاج بس من غير باقي بيانات المشروع.
+    function onlyStatusFieldsChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['status', 'editingStatus', 'shootingDetails', 'files', 'updatedAt']);
+    }
+
+    match /projects/{projectId} {
+      allow read: if hasRole(['management', 'client_management'])
+        || (hasRole(['production', 'editor']) && request.auth.uid in resource.data.teamIds);
+      allow create: if hasRole(['management', 'client_management']);
+      allow update: if hasRole(['management', 'client_management'])
+        || (hasRole(['production', 'editor'])
+            && request.auth.uid in resource.data.teamIds
+            && onlyStatusFieldsChanged());
+      allow delete: if hasRole(['management']);
+    }
+
+    // قائمة الأسعار المعتمدة: الإدارة وإدارة العملاء يقدروا يقرأوها (لاختيار الأسعار في العروض)،
+    // بس الإدارة بس اللي تقدر تعدّلها (زي ما هو محدد في صلاحياتها)
+    match /priceList/{itemId} {
+      allow read: if hasRole(['management', 'client_management']);
+      allow write: if hasRole(['management']);
+    }
+
+    // عروض الأسعار: الإدارة وإدارة العملاء يضيفوا ويعدّلوا، الحذف للإدارة بس
+    match /quotations/{quoteId} {
+      allow read, create, update: if hasRole(['management', 'client_management']);
+      allow delete: if hasRole(['management']);
+    }
+
+    // بيانات الشركة (بتظهر في عروض الأسعار المطبوعة بدل بيانات المطوّر) — الإدارة بس تعدّلها
+    match /settings/{docId} {
+      allow read: if hasRole(['management', 'client_management']);
+      allow write: if hasRole(['management']);
+    }
+
+    // المدفوعات: الإدارة بس (زي ما هو محدد في صلاحياتها بالظبط)
+    match /payments/{paymentId} {
+      allow read, write: if hasRole(['management']);
+    }
+
+    // المصروفات: الإدارة بس كمان
+    match /expenses/{expenseId} {
+      allow read, write: if hasRole(['management']);
+    }
+
+    // سجل النشاط: أي مستخدم مسجّل يقدر يسجّل حدث (نتيجة عادية لأي عملية بيعملها)،
+    // بس الإدارة بس تقدر تقرا السجل — والسجل نفسه غير قابل للتعديل أو الحذف
+    match /activity/{entryId} {
+      allow create: if isSignedIn();
+      allow read: if hasRole(['management']);
+      allow update, delete: if false;
+    }
+
+    // باقي الكوليكشنز (quotations, payments, expenses, activity...) هيتضاف لها قواعد
+    // مخصوصة مع بناء كل موديول في مراحله
+  }
+}

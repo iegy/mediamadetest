@@ -1,6 +1,7 @@
 import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
@@ -193,6 +194,7 @@ form.addEventListener("submit", async (ev) => {
       });
     }
     modal.hidden = true;
+    logActivity("act_expense_logged", name);
   } catch (err) {
     formError.textContent = t("err_save_generic") + err.message;
   } finally {

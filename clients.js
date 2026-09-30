@@ -2,6 +2,7 @@ import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { CLIENT_STATUS_KEYS, statusLabel, statusGroup } from "./permissions.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
@@ -238,12 +239,14 @@ form.addEventListener("submit", async (e) => {
   try {
     if (fId.value) {
       await updateDoc(doc(db, "clients", fId.value), payload);
+      logActivity("act_client_updated", name);
     } else {
       await addDoc(collection(db, "clients"), {
         ...payload,
         createdAt: serverTimestamp(),
         createdBy: auth.currentUser ? auth.currentUser.uid : null,
       });
+      logActivity("act_client_created", name);
     }
     closeModal();
   } catch (err) {
@@ -260,6 +263,7 @@ async function handleDelete(id) {
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "clients", id));
+    logActivity("act_client_deleted", c ? c.name : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);
   }

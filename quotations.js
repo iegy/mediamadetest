@@ -1,6 +1,7 @@
 import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
@@ -322,12 +323,14 @@ form.addEventListener("submit", async (e) => {
   try {
     if (fId.value) {
       await updateDoc(doc(db, "quotations", fId.value), payload);
+      logActivity("act_quote_updated", clientOpt.textContent);
     } else {
       await addDoc(collection(db, "quotations"), {
         ...payload,
         createdAt: serverTimestamp(),
         createdBy: auth.currentUser ? auth.currentUser.uid : null,
       });
+      logActivity("act_quote_created", clientOpt.textContent);
     }
     modal.hidden = true;
   } catch (err) {
@@ -344,6 +347,7 @@ async function handleDelete(id) {
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "quotations", id));
+    logActivity("act_quote_deleted", q ? q.clientName : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);
   }

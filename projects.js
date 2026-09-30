@@ -5,6 +5,7 @@ import {
   EDITING_STATUS_KEYS, editingStatusLabel,
 } from "./permissions.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
@@ -263,6 +264,7 @@ form.addEventListener("submit", async (e) => {
   try {
     if (fId.value) {
       await updateDoc(doc(db, "projects", fId.value), payload);
+      logActivity("act_project_updated", payload.clientName);
     } else {
       await addDoc(collection(db, "projects"), {
         ...payload,
@@ -276,6 +278,7 @@ form.addEventListener("submit", async (e) => {
         createdAt: serverTimestamp(),
         createdBy: auth.currentUser ? auth.currentUser.uid : null,
       });
+      logActivity("act_project_created", payload.clientName);
     }
     modal.hidden = true;
   } catch (err) {
@@ -292,6 +295,7 @@ async function handleDelete(id) {
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "projects", id));
+    logActivity("act_project_deleted", p ? p.clientName : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);
   }

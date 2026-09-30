@@ -2,6 +2,7 @@ import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { roleLabel } from "./permissions.js";
 import { t } from "./i18n.js";
+import { logActivity } from "./activity-log.js";
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   getAuth,
@@ -158,6 +159,7 @@ form.addEventListener("submit", async (e) => {
           role: fRole.value,
           createdAt: serverTimestamp(),
         });
+        logActivity("act_user_created", name);
       } finally {
         await deleteApp(secondaryApp);
       }
@@ -193,6 +195,7 @@ async function handleDeactivate(id) {
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "users", id));
+    logActivity("act_user_deactivated", u ? u.name : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);
   }

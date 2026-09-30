@@ -1,6 +1,7 @@
 import { watchAuth, logout, db } from "./auth.js";
 import { NAV_ITEMS, roleLabel } from "./permissions.js";
 import { t, getLang, setLang, applyDirection, applyI18n } from "./i18n.js";
+import { setActivityActor } from "./activity-log.js";
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 applyDirection();
@@ -23,6 +24,7 @@ export function initAppShell(onReady) {
       currentProfile = profile;
       userNameEl.textContent = profile.name || user.email;
       userRoleEl.textContent = roleLabel(profile.role);
+      setActivityActor(profile.name || user.email, profile.role);
       renderNav(sidebarNav, profile.role);
       watchOverdueFollowUps();
       if (onReady) onReady(profile, user);

@@ -7,6 +7,7 @@ import {
 import { t, getLang } from "./i18n.js";
 import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { findOrCreateFolder, uploadFile, shareFile } from "./drive.js";
+import { logActivity } from "./activity-log.js";
 
 const content = document.getElementById("sheet-content");
 const projectId = new URLSearchParams(window.location.search).get("id");
@@ -198,6 +199,7 @@ async function onFileChosen(e) {
     project.files = newFiles;
     renderFilesList();
     statusEl.textContent = "";
+    logActivity("act_file_uploaded", `${project.clientName || ""} — ${file.name}`);
   } catch (err) {
     statusEl.textContent = t("upload_error") + err.message;
   }
@@ -231,6 +233,7 @@ async function onSave(e) {
     await updateDoc(doc(db, "projects", projectId), payload);
     Object.assign(project, payload);
     saveBtn.textContent = t("sheet_saved_msg");
+    logActivity("act_sheet_updated", project.clientName || "");
     setTimeout(() => { saveBtn.textContent = t("btn_save"); saveBtn.disabled = false; }, 1200);
   } catch (err) {
     formError.textContent = t("err_save_generic") + err.message;
