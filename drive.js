@@ -105,3 +105,10 @@ export async function shareFile(fileId, email, role = "reader") {
     body: JSON.stringify({ type: "user", role, emailAddress: email }),
   });
 }
+
+// بيحذف الملف من Drive نفسه — بينجح بس لو اللي بيحاول الحذف هو مالك الملف (اللي رفعه فعليًا)
+export async function deleteFile(fileId) {
+  await driveFetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: "DELETE",
+  });
+}

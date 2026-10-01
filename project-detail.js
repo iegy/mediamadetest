@@ -6,7 +6,7 @@ import {
 } from "./permissions.js";
 import { t, getLang } from "./i18n.js";
 import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-import { findOrCreateFolder, uploadFile, shareFile } from "./drive.js";
+import { findOrCreateFolder, uploadFile, shareFile, deleteFile } from "./drive.js";
 import { logActivity } from "./activity-log.js";
 
 const content = document.getElementById("sheet-content");
@@ -156,17 +156,43 @@ function renderFilesList() {
     wrap.innerHTML = `<p style="font-size:13px; color:var(--ink-muted); margin:0;">${t("no_files_yet")}</p>`;
     return;
   }
-  wrap.innerHTML = files.map((f) => `
+  wrap.innerHTML = files.map((f, idx) => `
     <div style="border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--surface);">
       <iframe src="https://drive.google.com/file/d/${encodeURIComponent(f.driveFileId)}/preview"
         style="width:100%; height:220px; border:none; display:block;" loading="lazy"
         allow="autoplay"></iframe>
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; font-size:12.5px;">
-        <span>${escapeHtml(f.fileName)}</span>
-        <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; font-size:12.5px; gap:8px;">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(f.fileName)}</span>
+        <span style="display:flex; gap:10px; flex-shrink:0;">
+          <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>
+          <button type="button" class="file-delete-btn" data-idx="${idx}" style="border:none; background:none; color:var(--danger); cursor:pointer; font-family:inherit; font-size:12.5px; padding:0;">${t("btn_delete")}</button>
+        </span>
       </div>
     </div>
   `).join("");
+
+  wrap.querySelectorAll(".file-delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => handleDeleteFile(+btn.dataset.idx));
+  });
+}
+
+async function handleDeleteFile(idx) {
+  const f = (project.files || [])[idx];
+  if (!f) return;
+  if (!confirm(t("confirm_delete_file", { name: f.fileName }))) return;
+
+  try { await deleteFile(f.driveFileId); }
+  catch (err) { console.warn("Could not delete the file from Drive (probably not the owner):", err); }
+
+  const newFiles = (project.files || []).filter((_, i) => i !== idx);
+  try {
+    await updateDoc(doc(db, "projects", projectId), { files: newFiles, updatedAt: serverTimestamp() });
+    project.files = newFiles;
+    renderFilesList();
+    logActivity("act_file_deleted", f.fileName);
+  } catch (err) {
+    alert(t("err_delete_generic") + err.message);
+  }
 }
 
 async function onFileChosen(e) {

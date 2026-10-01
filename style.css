@@ -656,3 +656,16 @@ table.data-table {
   .cal-day { min-height: 62px; }
   .cal-event { font-size: 9.5px; }
 }
+
+/* ---------- Sticky first column (keeps the main label visible while scrolling tables) ---------- */
+
+.data-table th:first-child,
+.data-table td:first-child {
+  position: sticky;
+  inset-inline-start: 0;
+  background: var(--surface);
+  z-index: 1;
+  box-shadow: 1px 0 0 0 var(--border);
+}
+
+.data-table th:first-child { background: var(--surface-alt); z-index: 2; }
