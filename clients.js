@@ -95,11 +95,24 @@ function watchClients() {
     (snap) => {
       allClients = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       renderTable();
+      maybeOpenFromDeepLink();
     },
     (err) => {
       tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${t("err_save_generic")}${err.message}</td></tr>`;
     }
   );
+}
+
+let deepLinkHandled = false;
+function maybeOpenFromDeepLink() {
+  if (deepLinkHandled) return;
+  const id = new URLSearchParams(window.location.search).get("edit");
+  if (!id) return;
+  const c = allClients.find((x) => x.id === id);
+  if (c) {
+    deepLinkHandled = true;
+    openEdit(id);
+  }
 }
 
 function renderTable() {

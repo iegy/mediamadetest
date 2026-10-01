@@ -364,10 +364,29 @@ export const STRINGS = {
     act_project_deleted: "حذف مشروع",
     act_sheet_updated: "حدّث صفحة المشروع",
     act_file_uploaded: "رفع ملف",
+    act_file_deleted: "حذف ملف",
+    confirm_delete_file: 'متأكد إنك عايز تشيل "{name}" من المشروع؟ لو إنت اللي رفعته هيتحذف من Drive كمان، ولو رفعه حد تاني هيتشال من هنا بس ويفضل عنده.',
     act_payment_logged: "سجّل دفعة",
     act_expense_logged: "سجّل مصروف",
     act_user_created: "أضاف مستخدم",
     act_user_deactivated: "ألغى تفعيل مستخدم",
+
+    // Search
+    nav_search: "بحث",
+    page_title_search: "بحث",
+    search_placeholder_global: "دوّر على اسم عميل، رقم هاتف، اسم مشروع، خدمة، أو حالة...",
+    search_hint: "اكتب عشان تبحث في العملاء والمشاريع اللي تقدر توصلها.",
+    section_clients_results: "العملاء",
+    section_projects_results: "المشاريع",
+    no_search_results: "مفيش نتائج مطابقة.",
+
+    // Dashboard (remaining stats)
+    stat_leads: "عدد الـLeads",
+    stat_completed_projects: "المشاريع المكتملة",
+    stat_delayed_projects: "المشاريع المتأخرة",
+    stat_total_project_value: "إجمالي قيمة المشاريع",
+    stat_collected_amount: "المبالغ المحصلة",
+    stat_total_expenses_dash: "المصروفات",
   },
 
   en: {
@@ -725,10 +744,29 @@ export const STRINGS = {
     act_project_deleted: "Deleted a project",
     act_sheet_updated: "Updated the project sheet",
     act_file_uploaded: "Uploaded a file",
+    act_file_deleted: "Deleted a file",
+    confirm_delete_file: 'Are you sure you want to remove "{name}" from the project? If you uploaded it, it will also be deleted from Drive; if someone else did, it will just be unlinked here and stay in their Drive.',
     act_payment_logged: "Logged a payment",
     act_expense_logged: "Logged an expense",
     act_user_created: "Added a user",
     act_user_deactivated: "Deactivated a user",
+
+    // Search
+    nav_search: "Search",
+    page_title_search: "Search",
+    search_placeholder_global: "Search a client name, phone, project name, service, or status...",
+    search_hint: "Start typing to search clients and projects you have access to.",
+    section_clients_results: "Clients",
+    section_projects_results: "Projects",
+    no_search_results: "No matching results.",
+
+    // Dashboard (remaining stats)
+    stat_leads: "Leads Count",
+    stat_completed_projects: "Completed Projects",
+    stat_delayed_projects: "Delayed Projects",
+    stat_total_project_value: "Total Project Value",
+    stat_collected_amount: "Amount Collected",
+    stat_total_expenses_dash: "Expenses",
   },
 };
 

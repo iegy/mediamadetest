@@ -5,6 +5,7 @@ import { t } from "./i18n.js";
 export const NAV_ITEMS = {
   management: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "search", labelKey: "nav_search", href: "search.html", built: true },
     { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
@@ -19,6 +20,7 @@ export const NAV_ITEMS = {
   ],
   client_management: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "search", labelKey: "nav_search", href: "search.html", built: true },
     { key: "clients", labelKey: "nav_clients", href: "clients.html", built: true },
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
     { key: "quotations", labelKey: "nav_quotations", href: "quotations.html", built: true },
@@ -28,6 +30,7 @@ export const NAV_ITEMS = {
   ],
   sales: [
     { key: "dashboard", labelKey: "nav_dashboard", href: "dashboard.html", built: true },
+    { key: "search", labelKey: "nav_search", href: "search.html", built: true },
     { key: "leads", labelKey: "nav_leads", href: "clients.html", built: true },
     { key: "followup", labelKey: "nav_followup", href: "followup.html", built: true },
   ],

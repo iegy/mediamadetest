@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n-title="page_title_search">Search · Media Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="app-body">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="logo.png" alt="Media Made" class="brand-logo">
+        <span class="brand-word" data-i18n="brand">Media Made</span>
+      </div>
+
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="user-card">
+        <div class="user-avatar" aria-hidden="true"></div>
+        <div class="user-meta">
+          <span id="user-name" class="user-name">—</span>
+          <span id="user-role" class="user-role">—</span>
+        </div>
+      </div>
+      <button id="lang-toggle-side" class="lang-toggle" type="button" style="width:100%; margin-top:10px;" data-i18n="lang_switch">English</button>
+      <button id="logout-btn" class="btn-ghost" type="button" data-i18n="btn_logout">تسجيل الخروج</button>
+
+      <footer class="credit-footer credit-footer--sidebar">
+        by Ronadisa
+      </footer>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 data-i18n="page_title_search">بحث</h1>
+      </header>
+
+      <section class="content">
+        <div class="toolbar">
+          <input id="search-input" class="search-input" type="text" style="max-width:520px;" data-i18n-placeholder="search_placeholder_global" placeholder="دوّر على اسم عميل، رقم هاتف، اسم مشروع، خدمة، أو حالة...">
+        </div>
+
+        <p id="search-hint" style="font-size:13.5px; color:var(--ink-muted);" data-i18n="search_hint">اكتب عشان تبحث.</p>
+
+        <div id="clients-section" hidden>
+          <h2 style="font-size:15px; margin:18px 0 8px;" data-i18n="section_clients_results">العملاء</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_name">اسم العميل</th>
+                  <th data-i18n="th_phone">الهاتف</th>
+                  <th data-i18n="th_service">الخدمة</th>
+                  <th data-i18n="th_status">الحالة</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="clients-results"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="projects-section" hidden>
+          <h2 style="font-size:15px; margin:18px 0 8px;" data-i18n="section_projects_results">المشاريع</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="th_client">العميل</th>
+                  <th data-i18n="th_service">الخدمة</th>
+                  <th data-i18n="th_status">الحالة</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="projects-results"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p id="no-results" style="font-size:13.5px; color:var(--ink-muted);" hidden data-i18n="no_search_results">مفيش نتائج.</p>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="search.js"></script>
+</body>
+</html>
