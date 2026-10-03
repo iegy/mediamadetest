@@ -57,7 +57,7 @@
   th { color: var(--ink-muted); font-size: 12.5px; }
   tfoot td { font-weight: 800; border-top: 2px solid var(--border); border-bottom: none; }
   .status-line { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
-  .print-bar { max-width: 780px; margin: 0 auto 14px; text-align: end; }
+  .print-bar { max-width: 780px; margin: 0 auto 14px; display: flex; gap: 10px; justify-content: flex-end; }
   .print-btn {
     padding: 9px 18px; border: none; border-radius: 8px;
     background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
@@ -73,15 +73,24 @@
     padding: 5px 12px; border-radius: 999px; cursor: pointer;
   }
 
+  /* هوامش ورقة الطباعة بنحددها هنا بدل ما نعتمد على الافتراضي بتاع المتصفح */
+  @page { size: A4; margin: 15mm; }
+
   @media print {
-    body { background: #fff; padding: 0; }
-    .print-bar { display: none; }
-    .sheet { border: none; border-radius: 0; padding: 0; max-width: 100%; }
+    html, body { width: auto; background: #fff !important; margin: 0 !important; padding: 0 !important; }
+    .print-bar { display: none !important; }
+    .sheet {
+      border: none; border-radius: 0; padding: 0;
+      width: 100% !important; max-width: 100% !important; margin: 0 !important;
+    }
+    .head, table, .section { page-break-inside: avoid; }
+    p, td, th, h1, h2 { overflow-wrap: anywhere; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 </head>
 <body>
-  <div class="print-bar" style="display:flex; gap:10px; justify-content:flex-end;">
+  <div class="print-bar">
     <button id="lang-toggle" class="lang-toggle" type="button" data-i18n="lang_switch">English</button>
     <button class="print-btn" onclick="window.print()" data-i18n="print_btn">اطبع / احفظ كـ PDF</button>
   </div>
