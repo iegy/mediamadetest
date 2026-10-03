@@ -93,6 +93,7 @@ export const STRINGS = {
     err_save_generic: "حصل خطأ أثناء الحفظ: ",
     err_delete_generic: "تعذّر الحذف: ",
     confirm_delete_client: 'متأكد إنك عايز تحذف "{name}"؟ الخطوة دي مش قابلة للتراجع.',
+    err_client_has_related: 'العميل "{name}" ليه {count} سجل مرتبط (مشاريع أو عروض أسعار). احذفهم أو انقلهم لعميل تاني الأول.',
 
     status_new: "جديد",
     status_contacted: "تم التواصل",
@@ -213,6 +214,7 @@ export const STRINGS = {
     label_project_status: "حالة المشروع",
     label_editing_status: "حالة المونتاج",
     confirm_delete_project: 'متأكد إنك عايز تحذف مشروع "{name}"؟',
+    err_project_has_related: 'المشروع بتاع "{name}" ليه {count} سجل مرتبط (دفعات أو مصروفات). احذفهم الأول.',
 
     pstatus_brief: "بريف",
     pstatus_preparation: "تجهيز",
@@ -278,6 +280,7 @@ export const STRINGS = {
     th_pay_date: "التاريخ",
     confirm_delete_payment: "حذف الدفعة دي؟",
     err_amount_required: "اكتب مبلغ صحيح.",
+    confirm_overpayment: "المبلغ ده أكبر من المتبقي ({remaining}). متأكد إنك عايز تسجّله؟",
 
     // Expenses
     page_title_expenses: "المصروفات",
@@ -320,13 +323,13 @@ export const STRINGS = {
     btn_export: "تنزيل نسخة احتياطية",
     exporting_msg: "جاري التجهيز...",
     section_import: "استيراد البيانات",
-    import_warning: "الاستيراد بيضيف سجلات جديدة فوق الموجود، مش بيستبدله. لو نفس الملف اتستورد أكتر من مرة، ممكن يحصل تكرار في البيانات.",
+    import_warning: "الاستيراد بيسترجع كل سجل بنفس رقمه الأصلي، فلو في سجل بنفس الرقم موجود بالفعل في النظام، هيتم استبدال بياناته بالكامل بالنسخة اللي في الملف.",
     btn_choose_file: "اختر ملف",
     btn_import: "استيراد",
     importing_msg: "جاري الاستيراد...",
     import_done_msg: "تم الاستيراد بنجاح.",
     import_error: "حصل خطأ أثناء الاستيراد: ",
-    confirm_import: "متأكد إنك عايز تستورد البيانات دي؟ هيتضاف سجلات جديدة للنظام.",
+    confirm_import: "متأكد إنك عايز تستورد البيانات دي؟ أي سجل موجود بنفس الرقم هيتم استبدال بياناته بالكامل.",
 
     // Users & Permissions
     page_title_users: "المستخدمون والصلاحيات",
@@ -335,6 +338,8 @@ export const STRINGS = {
     th_role: "الدور",
     btn_reset_password: "إعادة تعيين كلمة المرور",
     btn_deactivate: "إلغاء التفعيل",
+    btn_activate: "تفعيل",
+    deactivated_label: "غير مفعّل",
     modal_title_new_user: "مستخدم جديد",
     modal_title_edit_user: "تعديل المستخدم",
     label_initial_password: "كلمة مرور مبدئية",
@@ -367,7 +372,9 @@ export const STRINGS = {
     act_file_deleted: "حذف ملف",
     confirm_delete_file: 'متأكد إنك عايز تشيل "{name}" من المشروع؟ لو إنت اللي رفعته هيتحذف من Drive كمان، ولو رفعه حد تاني هيتشال من هنا بس ويفضل عنده.',
     act_payment_logged: "سجّل دفعة",
+    act_payment_deleted: "حذف دفعة",
     act_expense_logged: "سجّل مصروف",
+    act_expense_deleted: "حذف مصروف",
     act_user_created: "أضاف مستخدم",
     act_user_deactivated: "ألغى تفعيل مستخدم",
 
@@ -476,6 +483,7 @@ export const STRINGS = {
     err_save_generic: "Error while saving: ",
     err_delete_generic: "Couldn't delete: ",
     confirm_delete_client: 'Are you sure you want to delete "{name}"? This can\u2019t be undone.',
+    err_client_has_related: 'The client "{name}" has {count} linked record(s) (projects or quotations). Delete or reassign them first.',
 
     status_new: "New",
     status_contacted: "Contacted",
@@ -593,6 +601,7 @@ export const STRINGS = {
     label_project_status: "Project Status",
     label_editing_status: "Editing Status",
     confirm_delete_project: 'Are you sure you want to delete the project "{name}"?',
+    err_project_has_related: 'The project for "{name}" has {count} linked record(s) (payments or expenses). Delete them first.',
 
     pstatus_brief: "Brief",
     pstatus_preparation: "Preparation",
@@ -658,6 +667,7 @@ export const STRINGS = {
     th_pay_date: "Date",
     confirm_delete_payment: "Delete this payment?",
     err_amount_required: "Enter a valid amount.",
+    confirm_overpayment: "This amount is more than the remaining balance ({remaining}). Log it anyway?",
 
     // Expenses
     page_title_expenses: "Expenses",
@@ -700,13 +710,13 @@ export const STRINGS = {
     btn_export: "Download Backup",
     exporting_msg: "Preparing...",
     section_import: "Import Data",
-    import_warning: "Import adds new records on top of what exists \u2014 it does not replace it. Re-importing the same file more than once can duplicate data.",
+    import_warning: "Import restores each record under its original ID, so if a record with that ID already exists in the system, its data will be fully overwritten by the version in the file.",
     btn_choose_file: "Choose File",
     btn_import: "Import",
     importing_msg: "Importing...",
     import_done_msg: "Import completed successfully.",
     import_error: "Error during import: ",
-    confirm_import: "Are you sure you want to import this data? New records will be added to the system.",
+    confirm_import: "Are you sure you want to import this data? Any existing record with the same ID will be fully overwritten.",
 
     // Users & Permissions
     page_title_users: "Users & Permissions",
@@ -715,6 +725,8 @@ export const STRINGS = {
     th_role: "Role",
     btn_reset_password: "Reset Password",
     btn_deactivate: "Deactivate",
+    btn_activate: "Activate",
+    deactivated_label: "Deactivated",
     modal_title_new_user: "New User",
     modal_title_edit_user: "Edit User",
     label_initial_password: "Initial Password",
@@ -747,7 +759,9 @@ export const STRINGS = {
     act_file_deleted: "Deleted a file",
     confirm_delete_file: 'Are you sure you want to remove "{name}" from the project? If you uploaded it, it will also be deleted from Drive; if someone else did, it will just be unlinked here and stay in their Drive.',
     act_payment_logged: "Logged a payment",
+    act_payment_deleted: "Deleted a payment",
     act_expense_logged: "Logged an expense",
+    act_expense_deleted: "Deleted an expense",
     act_user_created: "Added a user",
     act_user_deactivated: "Deactivated a user",
 

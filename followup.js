@@ -1,6 +1,7 @@
 import { db } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
+import { localDateIso } from "./date-utils.js";
 import {
   collection,
   onSnapshot,
@@ -46,7 +47,7 @@ function watchClients() {
 }
 
 function todayIso() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateIso();
 }
 
 function renderTable() {

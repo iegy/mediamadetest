@@ -6,6 +6,7 @@ import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
+  where,
   orderBy,
   onSnapshot,
   addDoc,
@@ -19,6 +20,7 @@ import {
 let currentRole = null;
 let allClients = [];
 let editingId = ""; // بيحدد لو المودال دلوقتي في وضع "تعديل" عشان عنوانه يتترجم صح مع تغيير اللغة
+let editingOriginalName = ""; // بنقارن بيه وقت الحفظ عشان نعرف لو الاسم اتغيّر فعلاً
 
 const tbody = document.getElementById("clients-tbody");
 const searchInput = document.getElementById("search-input");
@@ -185,6 +187,7 @@ function openEdit(id) {
   if (!c) return;
   fId.value = c.id;
   editingId = id;
+  editingOriginalName = c.name || "";
   fName.value = c.name || "";
   fPhone.value = c.phone || "";
   fType.value = c.clientType || "";
@@ -253,6 +256,9 @@ form.addEventListener("submit", async (e) => {
     if (fId.value) {
       await updateDoc(doc(db, "clients", fId.value), payload);
       logActivity("act_client_updated", name);
+      if (name !== editingOriginalName) {
+        await syncClientNameToLinkedRecords(fId.value, name);
+      }
     } else {
       await addDoc(collection(db, "clients"), {
         ...payload,
@@ -270,8 +276,43 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
+// لو العميل اتغيّر اسمه، بنحدّث النسخة المخزّنة من اسمه في مشاريعه وعروض أسعاره
+// (مخزّنة هناك كـclientName لتقليل القراءات)، عشان متفضلش بالاسم القديم
+async function syncClientNameToLinkedRecords(clientId, newName) {
+  try {
+    const [projectsSnap, quotesSnap] = await Promise.all([
+      getDocs(query(collection(db, "projects"), where("clientId", "==", clientId))),
+      getDocs(query(collection(db, "quotations"), where("clientId", "==", clientId))),
+    ]);
+    const updates = [];
+    projectsSnap.forEach((d) => updates.push(updateDoc(doc(db, "projects", d.id), { clientName: newName })));
+    quotesSnap.forEach((d) => updates.push(updateDoc(doc(db, "quotations", d.id), { clientName: newName })));
+    await Promise.all(updates);
+  } catch (err) {
+    console.warn("Could not sync the new client name to linked records:", err);
+  }
+}
+
 async function handleDelete(id) {
   const c = allClients.find((x) => x.id === id);
+
+  // بنمنع الحذف لو العميل ده مرتبط بمشاريع أو عروض أسعار، عشان منسيبش بيانات يتيمة
+  // (مشروع من غير عميل) بدل ما نحذفها كلها تلقائي وهو قرار أخطر
+  try {
+    const [projectsSnap, quotesSnap] = await Promise.all([
+      getDocs(query(collection(db, "projects"), where("clientId", "==", id))),
+      getDocs(query(collection(db, "quotations"), where("clientId", "==", id))),
+    ]);
+    const relatedCount = projectsSnap.size + quotesSnap.size;
+    if (relatedCount > 0) {
+      alert(t("err_client_has_related", { name: c ? c.name : "", count: relatedCount }));
+      return;
+    }
+  } catch (err) {
+    alert(t("err_delete_generic") + err.message);
+    return;
+  }
+
   const ok = confirm(t("confirm_delete_client", { name: c ? c.name : "" }));
   if (!ok) return;
   try {

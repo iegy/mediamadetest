@@ -4,6 +4,7 @@ import {
   collection,
   onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { localDateIso } from "./date-utils.js";
 
 initAppShell((profile) => {
   const role = profile.role;
@@ -41,7 +42,7 @@ function watchProjectStats(role) {
     ids.forEach((id) => setText(id, "—"));
     return;
   }
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateIso();
   onSnapshot(
     collection(db, "projects"),
     (snap) => {
@@ -64,7 +65,7 @@ function watchFollowUpsCount(role) {
     setText("stat-followups", "—");
     return;
   }
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateIso();
   onSnapshot(
     collection(db, "clients"),
     (snap) => {

@@ -2,6 +2,7 @@ import { DRIVE_CLIENT_ID, DRIVE_SCOPE } from "./drive-config.js";
 
 let tokenClient = null;
 let accessToken = null;
+let tokenExpiresAt = 0; // Date.now() بالمللي ثانية
 
 function ensureGisLoaded() {
   return new Promise((resolve, reject) => {
@@ -19,10 +20,14 @@ function ensureGisLoaded() {
   });
 }
 
-// بيطلب إذن الوصول لدرايف المستخدم (Popup تسجيل دخول جوجل) ويرجّع access token صالح لجلسة المتصفح الحالية
+// بيطلب إذن الوصول لدرايف المستخدم (Popup تسجيل دخول جوجل) ويرجّع access token صالح لجلسة المتصفح الحالية.
+// التوكن بتاع جوجل بيصلح لساعة بس، فبنتابع وقت انتهائه ونطلب واحد جديد تلقائي قبل ما يخلص
+// (مع هامش أمان دقيقة) بدل ما نفضل نستخدم توكن منتهي ويفشل الرفع من غير سبب واضح.
 export async function requestDriveAccess() {
   await ensureGisLoaded();
-  if (accessToken) return accessToken;
+  const SAFETY_MARGIN_MS = 60 * 1000;
+  if (accessToken && Date.now() < tokenExpiresAt - SAFETY_MARGIN_MS) return accessToken;
+
   return new Promise((resolve, reject) => {
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: DRIVE_CLIENT_ID,
@@ -30,6 +35,8 @@ export async function requestDriveAccess() {
       callback: (resp) => {
         if (resp.error) { reject(new Error(resp.error)); return; }
         accessToken = resp.access_token;
+        const expiresInSeconds = Number(resp.expires_in) || 3600;
+        tokenExpiresAt = Date.now() + expiresInSeconds * 1000;
         resolve(accessToken);
       },
     });
@@ -104,6 +111,14 @@ export async function shareFile(fileId, email, role = "reader") {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ type: "user", role, emailAddress: email }),
   });
+}
+
+// بيتأكد إن الرابط فعلاً رابط Drive حقيقي قبل ما نستخدمه كـ href — لأن حقل webViewLink
+// مُخزّن في مستند المشروع، والإنتاج/المونتاج عندهم صلاحية تعديل الحقل ده (files)، فلو حد
+// بعت رابط مزوّر زي javascript:... مباشرة عن طريق الـ SDK (من غير ما يعدي بواجهة الرفع
+// بتاعتنا)، المتصفح ممكن ينفّذه لو حد ضغط عليه. التحقق ده بيمنع عرضه كرابط قابل للنقر أصلاً.
+export function isSafeDriveLink(url) {
+  return typeof url === "string" && /^https:\/\/drive\.google\.com\//.test(url);
 }
 
 // بيحذف الملف من Drive نفسه — بينجح بس لو اللي بيحاول الحذف هو مالك الملف (اللي رفعه فعليًا)

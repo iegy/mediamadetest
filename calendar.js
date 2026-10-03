@@ -83,10 +83,11 @@ function render() {
 
 function renderWeekdayHeaders() {
   weekdaysEl.innerHTML = "";
-  // 2023-01-01 كان الأحد، بنستخدمه كمرجع ثابت لأسماء أيام الأسبوع بالترتيب الصحيح باللغة الحالية
+  // 2022-12-31 كان السبت، بنستخدمه كمرجع ثابت لأسماء أيام الأسبوع بالترتيب الصحيح باللغة
+  // الحالية — الأسبوع بيبدأ بالسبت (المتبع في مصر) مش الأحد
   const fmt = new Intl.DateTimeFormat(locale(), { weekday: "short" });
   for (let i = 0; i < 7; i++) {
-    const d = new Date(Date.UTC(2023, 0, 1 + i));
+    const d = new Date(Date.UTC(2022, 11, 31 + i));
     const el = document.createElement("div");
     el.className = "cal-weekday";
     el.textContent = fmt.format(d);
@@ -106,7 +107,9 @@ function renderGrid() {
   const eventsMap = buildEventsMap();
 
   const firstOfMonth = new Date(viewYear, viewMonth, 1);
-  const startOffset = firstOfMonth.getDay(); // 0=Sunday
+  // getDay(): 0=Sunday...6=Saturday. بما إن الأسبوع عندنا بيبدأ بالسبت، بنزيح الترقيم
+  // بحيث السبت = عمود 0 والجمعة = عمود 6
+  const startOffset = (firstOfMonth.getDay() + 1) % 7;
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const todayIso = `${today.getFullYear()}-${pad2(today.getMonth() + 1)}-${pad2(today.getDate())}`;
 

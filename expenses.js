@@ -2,6 +2,7 @@ import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
 import { logActivity } from "./activity-log.js";
+import { localDateIso } from "./date-utils.js";
 import {
   collection,
   query,
@@ -130,7 +131,7 @@ function openAdd() {
   form.reset();
   fId.value = "";
   editingId = "";
-  fDate.value = new Date().toISOString().slice(0, 10);
+  fDate.value = localDateIso();
   modalTitle.textContent = t("modal_title_new_expense");
   formError.textContent = "";
   modal.hidden = false;
@@ -209,6 +210,7 @@ async function handleDelete(id) {
   if (!ok) return;
   try {
     await deleteDoc(doc(db, "expenses", id));
+    logActivity("act_expense_deleted", e ? e.name : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);
   }

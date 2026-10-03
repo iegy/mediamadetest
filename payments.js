@@ -2,6 +2,7 @@ import { db, auth } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
 import { logActivity } from "./activity-log.js";
+import { localDateIso } from "./date-utils.js";
 import {
   collection,
   query,
@@ -138,7 +139,7 @@ function openLogPayment(projectId) {
   payForm.reset();
   payProjectId.value = projectId;
   payProjectLabel.textContent = `${p.clientName || ""} — ${p.service || ""}`;
-  payDate.value = new Date().toISOString().slice(0, 10);
+  payDate.value = localDateIso();
   payError.textContent = "";
   payModal.hidden = false;
 }
@@ -156,6 +157,13 @@ payForm.addEventListener("submit", async (e) => {
   }
   const p = allProjects.find((x) => x.id === payProjectId.value);
 
+  if (p) {
+    const remaining = (Number(p.projectValue) || 0) - paidForProject(p.id);
+    if (amount > remaining && remaining >= 0) {
+      if (!confirm(t("confirm_overpayment", { remaining: remaining.toLocaleString("en-US") }))) return;
+    }
+  }
+
   const saveBtn = document.getElementById("payment-save-btn");
   saveBtn.disabled = true;
   saveBtn.textContent = t("btn_saving");
@@ -164,7 +172,7 @@ payForm.addEventListener("submit", async (e) => {
       projectId: payProjectId.value,
       projectClientName: p ? p.clientName : "",
       amount,
-      date: payDate.value || new Date().toISOString().slice(0, 10),
+      date: payDate.value || localDateIso(),
       method: payMethod.value.trim(),
       notes: payNotes.value.trim(),
       createdAt: serverTimestamp(),
@@ -209,7 +217,9 @@ function renderHistory(projectId) {
   histTbody.querySelectorAll("[data-id]").forEach((b) =>
     b.addEventListener("click", async () => {
       if (!confirm(t("confirm_delete_payment"))) return;
+      const deletedPay = allPayments.find((x) => x.id === b.dataset.id);
       await deleteDoc(doc(db, "payments", b.dataset.id));
+      logActivity("act_payment_deleted", deletedPay ? `${deletedPay.projectClientName || ""} — ${deletedPay.amount}` : "");
       renderHistory(projectId);
     })
   );

@@ -4,11 +4,12 @@ import { t } from "./i18n.js";
 import {
   collection,
   getDocs,
-  addDoc,
+  doc,
+  setDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-const COLLECTIONS = ["clients", "projects", "quotations", "priceList", "payments", "expenses", "users", "settings"];
+const COLLECTIONS = ["clients", "projects", "quotations", "priceList", "payments", "expenses", "users", "settings", "activity"];
 
 const exportBtn = document.getElementById("export-btn");
 const exportStatus = document.getElementById("export-status");
@@ -76,12 +77,15 @@ importBtn.addEventListener("click", async () => {
       const docs = collectionsData[name] || [];
       for (const docData of docs) {
         const { id, createdAt, updatedAt, ...rest } = docData;
+        if (!id) continue; // مستند بدون id قديم ميتسجلش عليه، تخطّاه بدل ما يتكرر بـid عشوائي
         const payload = { ...rest };
         if (createdAt) payload.importedCreatedAt = createdAt;
         if (updatedAt) payload.importedUpdatedAt = updatedAt;
         payload.createdAt = serverTimestamp();
         payload.updatedAt = serverTimestamp();
-        await addDoc(collection(db, name), payload);
+        // بنستخدم نفس الـid الأصلي (مش addDoc اللي بيولّد id عشوائي) عشان الروابط بين
+        // المجموعات (clientId داخل مشروع، projectId داخل دفعة...) تفضل سليمة بعد الاستيراد
+        await setDoc(doc(db, name, id), payload);
       }
     }
 

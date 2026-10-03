@@ -9,6 +9,7 @@ import { logActivity } from "./activity-log.js";
 import {
   collection,
   query,
+  where,
   orderBy,
   onSnapshot,
   addDoc,
@@ -291,6 +292,22 @@ form.addEventListener("submit", async (e) => {
 
 async function handleDelete(id) {
   const p = allProjects.find((x) => x.id === id);
+
+  try {
+    const [paymentsSnap, expensesSnap] = await Promise.all([
+      getDocs(query(collection(db, "payments"), where("projectId", "==", id))),
+      getDocs(query(collection(db, "expenses"), where("projectId", "==", id))),
+    ]);
+    const relatedCount = paymentsSnap.size + expensesSnap.size;
+    if (relatedCount > 0) {
+      alert(t("err_project_has_related", { name: p ? p.clientName : "", count: relatedCount }));
+      return;
+    }
+  } catch (err) {
+    alert(t("err_delete_generic") + err.message);
+    return;
+  }
+
   const ok = confirm(t("confirm_delete_project", { name: p ? p.clientName : "" }));
   if (!ok) return;
   try {

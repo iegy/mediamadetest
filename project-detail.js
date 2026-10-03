@@ -5,8 +5,8 @@ import {
   editingStatusLabel, EDITING_STATUS_KEYS,
 } from "./permissions.js";
 import { t, getLang } from "./i18n.js";
-import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-import { findOrCreateFolder, uploadFile, shareFile, deleteFile } from "./drive.js";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { findOrCreateFolder, uploadFile, shareFile, deleteFile, isSafeDriveLink } from "./drive.js";
 import { logActivity } from "./activity-log.js";
 
 const content = document.getElementById("sheet-content");
@@ -95,7 +95,7 @@ function render() {
         <div class="field"><label>${t("label_shoot_date")}</label><p style="margin:0;">${escapeHtml(p.shootDate) || "—"}</p></div>
         <div class="field"><label>${t("label_delivery_date")}</label><p style="margin:0;">${escapeHtml(p.deliveryDate) || "—"}</p></div>
         <div class="field"><label>${t("label_shoot_location")}</label><p style="margin:0;">${escapeHtml(p.shootLocation) || "—"}</p></div>
-        <div class="field"><label>${t("label_team")}</label><p style="margin:0;">${(p.teamNames || []).join(", ") || "—"}</p></div>
+        <div class="field"><label>${t("label_team")}</label><p style="margin:0;">${escapeHtml((p.teamNames || []).join(", ")) || "—"}</p></div>
       </div>
     </div>
 
@@ -164,7 +164,9 @@ function renderFilesList() {
       <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; font-size:12.5px; gap:8px;">
         <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(f.fileName)}</span>
         <span style="display:flex; gap:10px; flex-shrink:0;">
-          <a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>
+          ${isSafeDriveLink(f.webViewLink)
+            ? `<a href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>`
+            : ""}
           <button type="button" class="file-delete-btn" data-idx="${idx}" style="border:none; background:none; color:var(--danger); cursor:pointer; font-family:inherit; font-size:12.5px; padding:0;">${t("btn_delete")}</button>
         </span>
       </div>
@@ -184,10 +186,12 @@ async function handleDeleteFile(idx) {
   try { await deleteFile(f.driveFileId); }
   catch (err) { console.warn("Could not delete the file from Drive (probably not the owner):", err); }
 
-  const newFiles = (project.files || []).filter((_, i) => i !== idx);
   try {
-    await updateDoc(doc(db, "projects", projectId), { files: newFiles, updatedAt: serverTimestamp() });
-    project.files = newFiles;
+    // arrayRemove بيشيل العنصر ده بالظبط من المصفوفة على السيرفر مباشرة (match كامل للقيم)،
+    // بدل ما نبني مصفوفة جديدة من نسختنا المحلية اللي ممكن تبقى قديمة لو حد تاني عدّلها
+    // في نفس اللحظة (Race Condition)
+    await updateDoc(doc(db, "projects", projectId), { files: arrayRemove(f), updatedAt: serverTimestamp() });
+    project.files = (project.files || []).filter((_, i) => i !== idx);
     renderFilesList();
     logActivity("act_file_deleted", f.fileName);
   } catch (err) {
@@ -220,9 +224,8 @@ async function onFileChosen(e) {
       uploadedBy: auth.currentUser ? auth.currentUser.uid : null,
       uploadedAt: new Date().toISOString(),
     };
-    const newFiles = [...(project.files || []), meta];
-    await updateDoc(doc(db, "projects", projectId), { files: newFiles, updatedAt: serverTimestamp() });
-    project.files = newFiles;
+    await updateDoc(doc(db, "projects", projectId), { files: arrayUnion(meta), updatedAt: serverTimestamp() });
+    project.files = [...(project.files || []), meta];
     renderFilesList();
     statusEl.textContent = "";
     logActivity("act_file_uploaded", `${project.clientName || ""} — ${file.name}`);

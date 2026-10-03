@@ -14,7 +14,6 @@ import {
   onSnapshot,
   doc,
   setDoc,
-  deleteDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
@@ -65,15 +64,18 @@ function renderTable() {
   }
   tbody.innerHTML = "";
   allUsers.forEach((u) => {
+    const isActive = !!u.role;
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${escapeHtml(u.name || "—")}</td>
       <td>${escapeHtml(u.email || "—")}</td>
-      <td>${roleLabel(u.role)}</td>
+      <td>${isActive ? roleLabel(u.role) : `<span class="status-pill lost">${t("deactivated_label")}</span>`}</td>
       <td class="row-actions">
         <button class="icon-btn" data-action="edit" data-id="${u.id}">${t("btn_edit")}</button>
         <button class="icon-btn" data-action="reset" data-id="${u.id}">${t("btn_reset_password")}</button>
-        <button class="icon-btn icon-btn--danger" data-action="deactivate" data-id="${u.id}">${t("btn_deactivate")}</button>
+        ${isActive
+          ? `<button class="icon-btn icon-btn--danger" data-action="deactivate" data-id="${u.id}">${t("btn_deactivate")}</button>`
+          : `<button class="icon-btn" data-action="edit" data-id="${u.id}">${t("btn_activate")}</button>`}
       </td>
     `;
     tbody.appendChild(tr);
@@ -194,7 +196,10 @@ async function handleDeactivate(id) {
   const ok = confirm(t("confirm_deactivate_user", { name: u ? u.name : "" }));
   if (!ok) return;
   try {
-    await deleteDoc(doc(db, "users", id));
+    // بنمسح الدور بس (مش المستند كله) — auth.js بيعتبر أي حساب من غير دور "مش مفعّل"
+    // ويرفض دخوله، لكن حسابه في Firebase Auth فاضل موجود فتقدر "تفعّله" تاني من غير
+    // ما تحتاج تعمل حساب جديد (اللي كان هيفشل برسالة "email-already-in-use")
+    await setDoc(doc(db, "users", id), { role: "", deactivatedAt: serverTimestamp() }, { merge: true });
     logActivity("act_user_deactivated", u ? u.name : "");
   } catch (err) {
     alert(t("err_delete_generic") + err.message);

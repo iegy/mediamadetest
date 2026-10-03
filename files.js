@@ -1,6 +1,7 @@
 import { db } from "./auth.js";
 import { initAppShell } from "./app-shell.js";
 import { t } from "./i18n.js";
+import { isSafeDriveLink } from "./drive.js";
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 let allFiles = [];
@@ -63,7 +64,9 @@ function renderTable() {
       <td>${escapeHtml(f.service || "—")}</td>
       <td>${escapeHtml(dateDisplay)}</td>
       <td class="row-actions">
-        <a class="icon-btn" href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>
+        ${isSafeDriveLink(f.webViewLink)
+          ? `<a class="icon-btn" href="${escapeHtml(f.webViewLink)}" target="_blank" rel="noopener">${t("open_in_drive")}</a>`
+          : ""}
         <a class="icon-btn" href="project-detail.html?id=${f.projectId}">${t("btn_open_sheet")}</a>
       </td>
     `;

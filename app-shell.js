@@ -3,6 +3,7 @@ import { NAV_ITEMS, roleLabel } from "./permissions.js";
 import { t, getLang, setLang, applyDirection, applyI18n } from "./i18n.js";
 import { setActivityActor } from "./activity-log.js";
 import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { localDateIso } from "./date-utils.js";
 
 applyDirection();
 
@@ -86,7 +87,7 @@ function watchOverdueFollowUps() {
   badge.hidden = true;
   link.appendChild(badge);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateIso();
   onSnapshot(collection(db, "clients"), (snap) => {
     const overdue = snap.docs.filter((d) => {
       const c = d.data();
